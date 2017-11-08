@@ -17,10 +17,12 @@ Usage: lambda-wrapper [options]
     -e, --engine <engine>     lambda function engine [node]
     -s, --service <items>     a list of cloud services, the wrapper automatically
                               connects to these services and passes handlers to
-                              the library
+                              the library                    
     -S, --source <source>     the source where to find library's code
     -N, --name <name>         the name of the library in the source   
     -o, --output <path>       path to save deployable lambda archive 
+    -t, --test                flag to run library's unit tests before wrapping
+                              into lambda package 
     -h, --help                output usage information
 ```
 
