@@ -8,6 +8,9 @@ import "fmt"
 // TODO: implement BuildWrapper method
 // TODO: implement InjectServicesIntoTemplate method
 // TODO: add check on supported services in initialeServiceHandlers
+// TODO: currently this code explicitly works with AWS/Node lambdas
+//       only. Restructure package in a way, where every package
+//       works with it's own cloud and engine
 
 // BuildTemplateFileName by cloud provider name and engine.
 func BuildTemplateFileName(cloud, engine string) string {
