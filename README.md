@@ -53,7 +53,6 @@ lib:
 
 ## Supported library sources
 * npm
-* git
 
 ## Requirements for libraries
 Library which should be wrapped into lambda should expose public `main` method.
