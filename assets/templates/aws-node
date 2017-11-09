@@ -6,7 +6,7 @@ const handler = require('{{lib}}')
 
 const services = {}
 
-// initiate required AWS services 
+// initiate required AWS services
 {{services}}
 
 exports.handler = (event, context, cb) => {

@@ -7,6 +7,7 @@ import "fmt"
 // TODO: implement ReadTemplateFile method
 // TODO: implement BuildWrapper method
 // TODO: implement InjectServicesIntoTemplate method
+// TODO: add check on supported services in initialeServiceHandlers
 
 // BuildTemplateFileName by cloud provider name and engine.
 func BuildTemplateFileName(cloud, engine string) string {
@@ -24,12 +25,31 @@ func BuildWrapper(template, engine, libraryName string, services []string) strin
 	return ""
 }
 
-// InjectLibraryIntoTemplate injects libraryName into template.
+// injectLibraryIntoTemplate injects libraryName into template.
 func injectLibraryIntoTemplate(template, libraryName string) string {
 	return s.Replace(template, "{{lib}}", libraryName, -1)
 }
 
-// InjectServicesIntoTemplate injects services into template.
-func InjectServicesIntoTemplate(services []string) string {
-	return ""
+// injectServicesIntoTemplate injects services into template.
+func injectServicesIntoTemplate(template string, services []string) string {
+	resultStr := template
+	resultStr = s.Replace(resultStr, "{{aws}}", initiateAwsHandler(services), -1)
+	resultStr = s.Replace(resultStr, "{{services}}", initialeServiceHandlers(services), -1)
+	return resultStr
+}
+
+func initiateAwsHandler(services []string) string {
+	if len(services) == 0 {
+		return ""
+	}
+
+	return "const aws = require('aws-sdk')"
+}
+
+func initialeServiceHandlers(services []string) string {
+	if len(services) == 0 {
+		return ""
+	}
+
+	return "const s3 = new aws.S3({apiVersion: 'latest'})"
 }
