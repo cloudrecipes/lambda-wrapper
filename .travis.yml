@@ -2,9 +2,9 @@ language: go
 
 sudo: false
 
-install: script/bootstrap
+install: script/bootstrap.sh
 
 script:
   - PATH="$HOME/gopath/bin:$PATH"
-  - script/lint
-  - script/coverage --coveralls
+  - script/lint.sh
+  - script/coverage.sh --coveralls
