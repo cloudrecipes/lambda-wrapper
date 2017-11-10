@@ -5,7 +5,6 @@ import s "strings"
 import "fmt"
 
 // TODO: implement ReadTemplateFile method
-// TODO: implement BuildWrapper method
 // TODO: implement InjectServicesIntoTemplate method
 // TODO: add check on supported services in initialeServiceHandlers
 // TODO: currently this code explicitly works with AWS/Node lambdas
@@ -26,8 +25,11 @@ func ReadTemplateFile(templateHome, fileName string) (string, error) {
 
 // BuildWrapper takes teamplate payload and injects necessary dependencies into it
 // to build wrapper code.
-func BuildWrapper(template, engine, libraryName string, services []string) string {
-	return ""
+func BuildWrapper(template, libraryName string, services []string) string {
+	resultStr := template
+	resultStr = injectLibraryIntoTemplate(resultStr, libraryName)
+	resultStr = injectServicesIntoTemplate(resultStr, services)
+	return resultStr
 }
 
 // injectLibraryIntoTemplate injects libraryName into template.
@@ -43,6 +45,7 @@ func injectServicesIntoTemplate(template string, services []string) string {
 	return resultStr
 }
 
+// initiateAwsHandler adds
 func initiateAwsHandler(services []string) string {
 	if len(services) == 0 {
 		return ""
@@ -56,5 +59,5 @@ func initialeServiceHandlers(services []string) string {
 		return ""
 	}
 
-	return "const s3 = new aws.S3({apiVersion: 'latest'})"
+	return "services.s3 = new aws.S3({apiVersion: 'latest'})"
 }

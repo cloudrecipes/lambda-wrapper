@@ -14,3 +14,12 @@ func TestBuildTemplateFileName(t *testing.T) {
 		}
 	}
 }
+
+func TestBuildWrapper(t *testing.T) {
+	for _, test := range buildWrapperTestCases {
+		actual := wrapper.BuildWrapper(test.template, test.libraryName, test.services)
+		if test.expected != actual {
+			t.Fatalf("Expected %s but got %s", test.expected, actual)
+		}
+	}
+}

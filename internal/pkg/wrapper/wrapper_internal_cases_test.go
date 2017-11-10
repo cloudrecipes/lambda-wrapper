@@ -25,7 +25,7 @@ var injectServicesIntoTemplateTestCases = []struct {
 	{
 		"// AWS SDK dependency\n{{aws}}\n// initiate required AWS services\n{{services}}",
 		[]string{"s3", "sqs"},
-		"// AWS SDK dependency\nconst aws = require('aws-sdk')\n// initiate required AWS services\nconst s3 = new aws.S3({apiVersion: 'latest'})",
+		"// AWS SDK dependency\nconst aws = require('aws-sdk')\n// initiate required AWS services\nservices.s3 = new aws.S3({apiVersion: 'latest'})",
 	},
 }
 
@@ -42,5 +42,5 @@ var initialeServiceHandlersTestCases = []struct {
 	expected string   // expected result
 }{
 	{[]string{}, ""},
-	{[]string{"s3", "sqs"}, "const s3 = new aws.S3({apiVersion: 'latest'})"},
+	{[]string{"s3", "sqs"}, "services.s3 = new aws.S3({apiVersion: 'latest'})"},
 }
