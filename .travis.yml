@@ -2,7 +2,11 @@ language: go
 
 sudo: false
 
-install: script/bootstrap.sh
+install:
+  - go get -d -t ./...
+  - go get -v github.com/golang/lint/golint
+  - go get -v golang.org/x/tools/cmd/cover
+  - go get -v github.com/mattn/goveralls
 
 script:
   - PATH="$HOME/gopath/bin:$PATH"
