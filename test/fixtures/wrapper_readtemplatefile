@@ -1,0 +1,10 @@
+// AWS SDK dependency
+{{aws}}
+
+// library dependency
+const handler = require('{{lib}}')
+
+const services = {}
+
+// initiate required AWS services
+{{services}}

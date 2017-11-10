@@ -3,7 +3,7 @@ package fs_test
 import (
 	"testing"
 
-	fs "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
+	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
 )
 
 func TestReadFile(t *testing.T) {

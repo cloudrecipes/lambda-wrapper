@@ -4,7 +4,7 @@ import "testing"
 
 func TestInjectLibraryIntoTemplate(t *testing.T) {
 	for _, test := range injectLibraryIntoTemplateTestCases {
-		actual := injectLibraryIntoTemplate(test.template, test.libraryName)
+		actual := injectLibraryIntoTemplate(test.template, test.libraryname)
 		if test.expected != actual {
 			t.Fatalf("Expected %s but got %s", test.expected, actual)
 		}
