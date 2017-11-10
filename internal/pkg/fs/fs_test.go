@@ -1,24 +1,24 @@
 package fs_test
 
 import (
-	"os"
-	"path"
 	"testing"
 
 	fs "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
 )
 
 func TestReadFile(t *testing.T) {
-	expected := "Hello Test!"
-	filename := path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
-		"lambda-wrapper", "test", "fixtures", "fs_readfile.txt")
-	actual, err := fs.ReadFile(filename)
+	for _, test := range readFileTestCases {
+		actual, err := fs.ReadFile(test.filename)
 
-	if err != nil {
-		t.Fatalf("Error %v", err)
-	}
+		if test.err != nil {
+			if err == nil || test.err.Error() != err.Error() {
+				t.Fatalf("Expected error to be %v but got %v", test.err, err)
+			}
+			continue
+		}
 
-	if expected != string(actual) {
-		t.Fatalf("Expected %s but got %s", expected, actual)
+		if test.expected != actual {
+			t.Fatalf("Expected %s but got %s", test.expected, actual)
+		}
 	}
 }
