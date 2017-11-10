@@ -50,9 +50,10 @@ lib:
 | AWS | node |
 
 ## Supported services
-| Cloud | Service |
-| --- | --- |
-| AWS | S3 |
+| Cloud | Engine | Service |
+| --- | --- | --- |
+| AWS | node | S3 |
+| AWS | node | SNS |
 
 ## Supported library sources
 * npm

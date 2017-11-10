@@ -5,7 +5,6 @@ import s "strings"
 import "fmt"
 
 // TODO: implement ReadTemplateFile method
-// TODO: implement InjectServicesIntoTemplate method
 // TODO: currently this code explicitly works with AWS/Node lambdas
 //       only. Restructure package in a way, where every package
 //       works with it's own cloud and engine.
