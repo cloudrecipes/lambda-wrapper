@@ -1,4 +1,7 @@
 # Lambda Wrapper
+[![Build Status](https://travis-ci.org/cloudrecipes/lambda-wrapper.svg?branch=master)](https://travis-ci.org/cloudrecipes/lambda-wrapper)
+[![Coverage Status](https://coveralls.io/repos/github/cloudrecipes/lambda-wrapper/badge.svg?branch=master)](https://coveralls.io/github/cloudrecipes/lambda-wrapper?branch=master)
+
 This tool wraps libraries into lambda functions to be run on cloud. It creates
 deployable `*.zip` file.
 
