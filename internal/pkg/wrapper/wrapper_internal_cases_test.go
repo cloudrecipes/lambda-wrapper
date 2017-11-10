@@ -25,7 +25,7 @@ var injectServicesIntoTemplateTestCases = []struct {
 	{
 		"// AWS SDK dependency\n{{aws}}\n// initiate required AWS services\n{{services}}",
 		[]string{"s3", "sqs"},
-		"// AWS SDK dependency\nconst aws = require('aws-sdk')\n// initiate required AWS services\nservices.s3 = new aws.S3({apiVersion: 'latest'})",
+		"// AWS SDK dependency\nconst aws = require('aws-sdk')\n// initiate required AWS services\nservices.s3 = new aws.S3({apiVersion: 'latest'})\n",
 	},
 }
 
@@ -37,10 +37,10 @@ var initiateAwsHandlerTestCases = []struct {
 	{[]string{"s3", "sqs"}, "const aws = require('aws-sdk')"},
 }
 
-var initialeServiceHandlersTestCases = []struct {
+var initiateServiceHandlersTestCases = []struct {
 	services []string // list of services to inject into template
 	expected string   // expected result
 }{
 	{[]string{}, ""},
-	{[]string{"s3", "sqs"}, "services.s3 = new aws.S3({apiVersion: 'latest'})"},
+	{[]string{"s3", "sqs", "sns"}, "services.s3 = new aws.S3({apiVersion: 'latest'})\n\nservices.sns = new aws.SNS()"},
 }

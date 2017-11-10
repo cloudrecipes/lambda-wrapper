@@ -29,9 +29,9 @@ func TestInitiateAwsHandler(t *testing.T) {
 	}
 }
 
-func TestInitialeServiceHandlers(t *testing.T) {
-	for _, test := range initialeServiceHandlersTestCases {
-		actual := initialeServiceHandlers(test.services)
+func TestInitiateServiceHandlers(t *testing.T) {
+	for _, test := range initiateServiceHandlersTestCases {
+		actual := initiateServiceHandlers(test.services)
 		if test.expected != actual {
 			t.Fatalf("Expected %s but got %s", test.expected, actual)
 		}

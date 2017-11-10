@@ -6,12 +6,16 @@ import "fmt"
 
 // TODO: implement ReadTemplateFile method
 // TODO: implement InjectServicesIntoTemplate method
-// TODO: add check on supported services in initialeServiceHandlers
 // TODO: currently this code explicitly works with AWS/Node lambdas
 //       only. Restructure package in a way, where every package
 //       works with it's own cloud and engine.
 //       Refactoring: define common interface, and all other modules
 //       should implement an interface
+
+var AWS_SERVICES = map[string]string{
+	"s3":  "new aws.S3({apiVersion: 'latest'})",
+	"sns": "new aws.SNS()",
+}
 
 // BuildTemplateFileName by cloud provider name and engine.
 func BuildTemplateFileName(cloud, engine string) string {
@@ -41,7 +45,7 @@ func injectLibraryIntoTemplate(template, libraryName string) string {
 func injectServicesIntoTemplate(template string, services []string) string {
 	resultStr := template
 	resultStr = s.Replace(resultStr, "{{aws}}", initiateAwsHandler(services), -1)
-	resultStr = s.Replace(resultStr, "{{services}}", initialeServiceHandlers(services), -1)
+	resultStr = s.Replace(resultStr, "{{services}}", initiateServiceHandlers(services), -1)
 	return resultStr
 }
 
@@ -54,10 +58,20 @@ func initiateAwsHandler(services []string) string {
 	return "const aws = require('aws-sdk')"
 }
 
-func initialeServiceHandlers(services []string) string {
+func initiateServiceHandlers(services []string) string {
 	if len(services) == 0 {
 		return ""
 	}
 
-	return "services.s3 = new aws.S3({apiVersion: 'latest'})"
+	handlers := make([]string, len(services))
+	for i, v := range services {
+		handler, exists := AWS_SERVICES[v]
+		if exists == true {
+			handlers[i] = fmt.Sprintf("services.%s = %s", v, handler)
+		} else {
+			handlers[i] = ""
+		}
+	}
+
+	return s.Join(handlers, "\n")
 }
