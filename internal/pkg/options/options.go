@@ -1,3 +1,4 @@
+// Package options contains structures and methods to work with application options.
 package options
 
 import "errors"
