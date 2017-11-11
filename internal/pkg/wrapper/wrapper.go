@@ -15,7 +15,8 @@ import (
 //       Refactoring: define common interface, and all other modules
 //       should implement an interface
 
-var AWS_SERVICES = map[string]string{
+// awsservices is the map of supported services and handler initiators.
+var awsservices = map[string]string{
 	"s3":  "new aws.S3({apiVersion: 'latest'})",
 	"sns": "new aws.SNS()",
 }
@@ -69,7 +70,7 @@ func initiateServiceHandlers(services []string) string {
 
 	handlers := make([]string, len(services))
 	for i, v := range services {
-		handler, exists := AWS_SERVICES[v]
+		handler, exists := awsservices[v]
 		if exists == true {
 			handlers[i] = fmt.Sprintf("services.%s = %s", v, handler)
 		} else {
