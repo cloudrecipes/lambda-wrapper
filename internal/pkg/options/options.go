@@ -11,6 +11,7 @@ type Options struct {
 	Services     []string
 	LibSource    string
 	LibName      string
+	Output       string
 	TestRequired bool
 }
 
@@ -32,6 +33,10 @@ func (o *Options) Validate() error {
 
 	if o.LibName == "" {
 		errs = append(errs, "Library name required.")
+	}
+
+	if o.Output == "" {
+		errs = append(errs, "Output file name required.")
 	}
 
 	if len(errs) > 0 {

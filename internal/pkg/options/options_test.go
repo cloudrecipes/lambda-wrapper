@@ -14,6 +14,7 @@ func TestValidate(t *testing.T) {
 			Engine:    test.engine,
 			LibSource: test.libsource,
 			LibName:   test.libname,
+			Output:    test.output,
 		}
 
 		actual := testOptions.Validate()
