@@ -30,6 +30,43 @@ func TestNewCliApp(t *testing.T) {
 	}
 }
 
+func TestRunDefault(t *testing.T) {
+	action := func(opts *options.Options) error {
+		return nil
+	}
+
+	old := os.Stdout // keep backup of the real stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+	outC := make(chan string)
+
+	// copy the output in a separate goroutine so printing can't block indefinitely
+	go func() {
+		var buf bytes.Buffer
+		io.Copy(&buf, r)
+		outC <- buf.String()
+	}()
+
+	testApp := cli.NewCliApp(action)
+	args := []string{"lambda-wrapper"}
+	err := testApp.Run(args)
+
+	// back to normal state
+	w.Close()
+	os.Stdout = old // restoring the real stdout
+	out := <-outC
+
+	if err != nil {
+		t.Fatal("Expected Application to be successfully run")
+	}
+
+	prefix := "Missing some of the required options:"
+
+	if !s.HasPrefix(out, prefix) {
+		t.Fatalf("\n>>> Expected:\n%s\n<<< to have prefix:\n%s", out, prefix)
+	}
+}
+
 func TestRunHelp(t *testing.T) {
 	action := func(opts *options.Options) error {
 		t.Fail()

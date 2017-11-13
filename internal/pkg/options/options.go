@@ -1,8 +1,11 @@
 // Package options contains structures and methods to work with application options.
 package options
 
-import "errors"
-import s "strings"
+import (
+	"errors"
+	"fmt"
+	s "strings"
+)
 
 // Options is a structure to store application options
 type Options struct {
@@ -20,27 +23,28 @@ func (o *Options) Validate() error {
 	errs := []string{}
 
 	if o.Cloud == "" {
-		errs = append(errs, "Cloud provider required.")
+		errs = append(errs, "cloud")
 	}
 
 	if o.Engine == "" {
-		errs = append(errs, "Engine required.")
+		errs = append(errs, "engine")
 	}
 
 	if o.LibSource == "" {
-		errs = append(errs, "Library source required.")
+		errs = append(errs, "libsource")
 	}
 
 	if o.LibName == "" {
-		errs = append(errs, "Library name required.")
+		errs = append(errs, "libname")
 	}
 
 	if o.Output == "" {
-		errs = append(errs, "Output file name required.")
+		errs = append(errs, "output")
 	}
 
 	if len(errs) > 0 {
-		return errors.New(s.Join(errs, "\n"))
+		errmessage := fmt.Sprintf("Missing some of the required options: %s", s.Join(errs, ", "))
+		return errors.New(errmessage)
 	}
 
 	return nil

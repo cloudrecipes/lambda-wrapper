@@ -2,6 +2,8 @@
 package cli
 
 import (
+	"fmt"
+
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
 	clihandler "gopkg.in/urfave/cli.v1"
 )
@@ -80,6 +82,11 @@ Usage: lambda-wrapper [options]
 	}
 
 	app.Action = func(c *clihandler.Context) error {
+		if err := opts.Validate(); err != nil {
+			fmt.Println(err)
+			clihandler.ShowAppHelp(c)
+			return nil
+		}
 		return action(opts)
 	}
 

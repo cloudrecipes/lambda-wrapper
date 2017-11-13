@@ -12,33 +12,23 @@ var validateTestCases = []struct {
 }{
 	{
 		"", "", "", "", "",
-		errors.New(`Cloud provider required.
-Engine required.
-Library source required.
-Library name required.
-Output file name required.`),
+		errors.New("Missing some of the required options: cloud, engine, libsource, libname, output"),
 	},
 	{
 		"AWS", "", "", "", "",
-		errors.New(`Engine required.
-Library source required.
-Library name required.
-Output file name required.`),
+		errors.New("Missing some of the required options: engine, libsource, libname, output"),
 	},
 	{
 		"AWS", "node", "", "", "",
-		errors.New(`Library source required.
-Library name required.
-Output file name required.`),
+		errors.New("Missing some of the required options: libsource, libname, output"),
 	},
 	{
 		"AWS", "node", "npm", "", "",
-		errors.New(`Library name required.
-Output file name required.`),
+		errors.New("Missing some of the required options: libname, output"),
 	},
 	{
 		"AWS", "node", "npm", "foo/bar", "",
-		errors.New("Output file name required."),
+		errors.New("Missing some of the required options: output"),
 	},
 	{
 		"AWS", "node", "npm", "foo/bar", "lambda.zip", nil,
