@@ -50,8 +50,10 @@ Usage: lambda-wrapper [options]
 			Destination: &opts.Engine,
 		},
 		clihandler.StringSliceFlag{
-			Name:  "service, s",
-			Usage: "a list of cloud services to initiate in the wrapper",
+			Name: "service, s",
+			Usage: `a list of cloud services, the wrapper will automatically
+			initiate handlers to these services and pass then to
+			the library`,
 		},
 		clihandler.StringFlag{
 			Name:        "libsource, S",
@@ -70,8 +72,9 @@ Usage: lambda-wrapper [options]
 			Destination: &opts.Output,
 		},
 		clihandler.BoolFlag{
-			Name:        "test, t",
-			Usage:       "flag to run library's unit tests before wrapping into lambda package",
+			Name: "test, t",
+			Usage: `flag to run library's unit tests before wrapping
+			into lambda package`,
 			Destination: &opts.TestRequired,
 		},
 	}
