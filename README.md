@@ -15,18 +15,18 @@ Usage: lambda-wrapper [options]
 
   Options:
 
-    -V, --version             output the version number
-    -c, --cloud <cloud>       cloud provider [AWS]
-    -e, --engine <engine>     lambda function engine [node]
-    -s, --service <items>     a list of cloud services, the wrapper automatically
-                              connects to these services and passes handlers to
-                              the library                    
-    -S, --source <source>     the source where to find library's code
-    -N, --name <name>         the name of the library in the source   
-    -o, --output <path>       path to save deployable lambda archive 
-    -t, --test                flag to run library's unit tests before wrapping
-                              into lambda package 
-    -h, --help                output usage information
+    --cloud value, -c value      cloud provider name (default: "AWS")
+    --engine value, -e value     lambda function engine (default: "node")
+    --service value, -s value    a list of cloud services, the wrapper will automatically
+                                 initiate handlers to these services and pass then to
+                                 the library
+    --libsource value, -S value  the source where to find library's code (default: "npm")
+    --libname value, -N value    the name of the library in the source
+    --output value, -o value     path to save deployable lambda archive
+    --test, -t                   flag to run library's unit tests before wrapping
+                                 into lambda package
+    --help, -h                   show help
+    --version, -v                print the version
 ```
 
 All options might be set via `.lwrc.yaml` file:
@@ -69,6 +69,8 @@ __main(data, services)__
 * Returns: Promise - callback of lambda handler will be invoked when promise resolves. If promise rejected `err` object will be passed to the callback.
 
 ## Built With
+* [project-layout](https://github.com/golang-standards/project-layout) - Standard Go Project Layout
+* [urfave/cli](https://github.com/urfave/cli) - Simple, fast, and fun package for building command line apps in Go
 
 ## Authors
 * [Anton Klimenko](https://github.com/antklim)
