@@ -4,8 +4,13 @@ import (
 	"os"
 
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/cli"
+	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
 )
 
 func main() {
-	cli.NewCliApp().Run(os.Args)
+	action := func(opts *options.Options) error {
+		return nil
+	}
+
+	cli.NewCliApp(action).Run(os.Args)
 }

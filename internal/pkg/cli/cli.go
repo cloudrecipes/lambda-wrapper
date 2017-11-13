@@ -19,7 +19,7 @@ type App struct {
 }
 
 // NewCliApp creates an instance of CLI applicaion.
-func NewCliApp() *App {
+func NewCliApp(action func(o *options.Options) error) *App {
 	opts := &options.Options{}
 
 	app := clihandler.NewApp()
@@ -74,6 +74,10 @@ Usage: lambda-wrapper [options]
 			Usage:       "flag to run library's unit tests before wrapping into lambda package",
 			Destination: &opts.TestRequired,
 		},
+	}
+
+	app.Action = func(c *clihandler.Context) error {
+		return action(opts)
 	}
 
 	return &App{

@@ -4,10 +4,15 @@ import (
 	"testing"
 
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/cli"
+	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
 )
 
 func TestNewCliApp(t *testing.T) {
-	testApp := cli.NewCliApp()
+	action := func(opts *options.Options) error {
+		return nil
+	}
+
+	testApp := cli.NewCliApp(action)
 	if testApp == nil {
 		t.Fatal("Expected Application to be not nil")
 	}
@@ -22,7 +27,10 @@ func TestNewCliApp(t *testing.T) {
 }
 
 func TestRun(t *testing.T) {
-	testApp := cli.NewCliApp()
+	action := func(opts *options.Options) error {
+		return nil
+	}
+	testApp := cli.NewCliApp(action)
 	args := []string{"lambda-wrapper", "--help"}
 	err := testApp.Run(args)
 
