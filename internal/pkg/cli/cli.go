@@ -14,6 +14,17 @@ const Name string = "lambda-wrapper"
 // Version is the current applicaion version.
 const Version string = "0.1.0"
 
+// Usage is the application usage text template.
+const Usage string = `
+Usage: lambda-wrapper [options]
+
+
+  Options:
+
+		{{range .VisibleFlags}}{{.}}
+		{{end}}
+`
+
 // App is a structure for the CLI applicaion.
 type App struct {
 	App     *clihandler.App
@@ -27,18 +38,32 @@ func NewCliApp(action func(o *options.Options) error) *App {
 	app := clihandler.NewApp()
 	app.Name = Name
 	app.Version = Version
+	app.CustomAppHelpTemplate = Usage
+	app.Flags = flags(opts)
 
-	app.CustomAppHelpTemplate = `
-Usage: lambda-wrapper [options]
+	app.Action = func(c *clihandler.Context) error {
+		if err := opts.Validate(); err != nil {
+			fmt.Println(err)
+			clihandler.ShowAppHelp(c)
+			return nil
+		}
+		return action(opts)
+	}
 
+	return &App{
+		App:     app,
+		Options: opts,
+	}
+}
 
-  Options:
+// Run CLI applicaion.
+func (cli *App) Run(args []string) error {
+	return cli.App.Run(args)
+}
 
-		{{range .VisibleFlags}}{{.}}
-		{{end}}
-`
-
-	app.Flags = []clihandler.Flag{
+// flags configures list of applicaion flags.
+func flags(opts *options.Options) []clihandler.Flag {
+	return []clihandler.Flag{
 		clihandler.StringFlag{
 			Name:        "cloud, c",
 			Value:       "AWS",
@@ -80,23 +105,4 @@ Usage: lambda-wrapper [options]
 			Destination: &opts.TestRequired,
 		},
 	}
-
-	app.Action = func(c *clihandler.Context) error {
-		if err := opts.Validate(); err != nil {
-			fmt.Println(err)
-			clihandler.ShowAppHelp(c)
-			return nil
-		}
-		return action(opts)
-	}
-
-	return &App{
-		App:     app,
-		Options: opts,
-	}
-}
-
-// Run CLI applicaion.
-func (cli *App) Run(args []string) error {
-	return cli.App.Run(args)
 }

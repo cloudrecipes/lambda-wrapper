@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/cli"
@@ -9,6 +10,7 @@ import (
 
 func main() {
 	action := func(opts *options.Options) error {
+		fmt.Printf("%v\n", opts)
 		return nil
 	}
 

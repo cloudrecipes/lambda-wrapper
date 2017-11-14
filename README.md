@@ -36,9 +36,10 @@ engine: node
 service:
   - s3
   - sqs
-lib:
-  source: npm
-  name: @foo/bar
+libsource: npm
+libname: '@foo/bar'
+output: lambda.zip
+test: true
 ```
 
 ## Supported cloud providers
