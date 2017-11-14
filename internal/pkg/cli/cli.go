@@ -32,7 +32,7 @@ type App struct {
 }
 
 // NewCliApp creates an instance of CLI applicaion.
-func NewCliApp(action func(o *options.Options) error) *App {
+func NewCliApp(fileoptions *options.Options, action func(o *options.Options) error) *App {
 	opts := &options.Options{}
 
 	app := clihandler.NewApp()
@@ -40,6 +40,38 @@ func NewCliApp(action func(o *options.Options) error) *App {
 	app.Version = Version
 	app.CustomAppHelpTemplate = Usage
 	app.Flags = flags(opts)
+
+	app.Before = func(c *clihandler.Context) error {
+		if opts.Cloud == "" {
+			opts.Cloud = fileoptions.Cloud
+		}
+
+		if opts.Engine == "" {
+			opts.Engine = fileoptions.Engine
+		}
+
+		if len(opts.Services) == 0 {
+			// TODO: Add services population
+		}
+
+		if opts.LibSource == "" {
+			opts.LibSource = fileoptions.LibSource
+		}
+
+		if opts.LibName == "" {
+			opts.LibName = fileoptions.LibName
+		}
+
+		if opts.Output == "" {
+			opts.Output = fileoptions.Output
+		}
+
+		if !opts.TestRequired {
+			opts.LibSource = fileoptions.LibSource
+		}
+
+		return nil
+	}
 
 	app.Action = func(c *clihandler.Context) error {
 		if err := opts.Validate(); err != nil {

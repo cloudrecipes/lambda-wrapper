@@ -16,7 +16,7 @@ func TestNewCliApp(t *testing.T) {
 		return nil
 	}
 
-	testApp := cli.NewCliApp(action)
+	testApp := cli.NewCliApp(&options.Options{}, action)
 	if testApp == nil {
 		t.Fatal("Expected Application to be not nil")
 	}
@@ -47,7 +47,7 @@ func TestRunDefault(t *testing.T) {
 		outC <- buf.String()
 	}()
 
-	testApp := cli.NewCliApp(action)
+	testApp := cli.NewCliApp(&options.Options{}, action)
 	args := []string{"lambda-wrapper"}
 	err := testApp.Run(args)
 
@@ -85,7 +85,7 @@ func TestRunHelp(t *testing.T) {
 		outC <- buf.String()
 	}()
 
-	testApp := cli.NewCliApp(action)
+	testApp := cli.NewCliApp(&options.Options{}, action)
 	args := []string{"lambda-wrapper", "--help"}
 	err := testApp.Run(args)
 
@@ -123,7 +123,7 @@ func TestRunVersion(t *testing.T) {
 		outC <- buf.String()
 	}()
 
-	testApp := cli.NewCliApp(action)
+	testApp := cli.NewCliApp(&options.Options{}, action)
 	args := []string{"lambda-wrapper", "--version"}
 	err := testApp.Run(args)
 
@@ -176,7 +176,7 @@ func TestRun(t *testing.T) {
 		return nil
 	}
 
-	testApp := cli.NewCliApp(action)
+	testApp := cli.NewCliApp(&options.Options{}, action)
 	args := []string{"lambda-wrapper", "-N", "@foo/bar", "--output", "lambda.zip", "-t"}
 	err := testApp.Run(args)
 

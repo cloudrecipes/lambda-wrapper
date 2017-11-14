@@ -9,10 +9,12 @@ import (
 )
 
 func main() {
+	opts, _ := options.FromYamlFile(options.DefaultOptionsFileName)
+
 	action := func(opts *options.Options) error {
 		fmt.Printf("%v\n", opts)
 		return nil
 	}
 
-	cli.NewCliApp(action).Run(os.Args)
+	cli.NewCliApp(opts, action).Run(os.Args)
 }
