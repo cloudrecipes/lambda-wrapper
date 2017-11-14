@@ -11,7 +11,7 @@ import (
 )
 
 // DefaultOptionsFileName default file name with options to read.
-const DefaultOptionsFileName string = "lwrc.yaml"
+const DefaultOptionsFileName string = ".lwrc.yaml"
 
 // Options is a structure to store application options
 type Options struct {
