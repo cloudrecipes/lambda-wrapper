@@ -50,8 +50,8 @@ func NewCliApp(fileoptions *options.Options, action func(o *options.Options) err
 			opts.Engine = fileoptions.Engine
 		}
 
-		if len(opts.Services) == 0 {
-			// TODO: Add services population
+		if len(opts.Services) == 0 && len(fileoptions.Services) > 0 {
+			opts.Services = append([]string(nil), fileoptions.Services...)
 		}
 
 		if opts.LibSource == "" {
@@ -98,13 +98,11 @@ func flags(opts *options.Options) []clihandler.Flag {
 	return []clihandler.Flag{
 		clihandler.StringFlag{
 			Name:        "cloud, c",
-			Value:       "AWS",
 			Usage:       "cloud provider name",
 			Destination: &opts.Cloud,
 		},
 		clihandler.StringFlag{
 			Name:        "engine, e",
-			Value:       "node",
 			Usage:       "lambda function engine",
 			Destination: &opts.Engine,
 		},
@@ -116,7 +114,6 @@ func flags(opts *options.Options) []clihandler.Flag {
 		},
 		clihandler.StringFlag{
 			Name:        "libsource, S",
-			Value:       "npm",
 			Usage:       "the source where to find library's code",
 			Destination: &opts.LibSource,
 		},
