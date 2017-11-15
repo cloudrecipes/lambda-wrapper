@@ -1,0 +1,9 @@
+cloud: AWS
+engine: node
+service:
+  - s3
+  - sqs
+libsource: npm
+libname: '@foo/bar'
+output: lambda.zip
+test: true

@@ -15,12 +15,12 @@ Usage: lambda-wrapper [options]
 
   Options:
 
-    --cloud value, -c value      cloud provider name (default: "AWS")
-    --engine value, -e value     lambda function engine (default: "node")
+    --cloud value, -c value      cloud provider name
+    --engine value, -e value     lambda function engine
     --service value, -s value    a list of cloud services, the wrapper will automatically
                                  initiate handlers to these services and pass then to
                                  the library
-    --libsource value, -S value  the source where to find library's code (default: "npm")
+    --libsource value, -S value  the source where to find library's code
     --libname value, -N value    the name of the library in the source
     --output value, -o value     path to save deployable lambda archive
     --test, -t                   flag to run library's unit tests before wrapping
@@ -36,10 +36,17 @@ engine: node
 service:
   - s3
   - sqs
-lib:
-  source: npm
-  name: @foo/bar
+libsource: npm
+libname: '@foo/bar'
+output: lambda.zip
+test: true
 ```
+Configuration file should be located in the process working directory.
+
+### Precedence
+The precedence for option value sources is as follows (highest to lowest):
+1. Command line option value from user
+2. Configuration file (if found)
 
 ## Supported cloud providers
 * AWS

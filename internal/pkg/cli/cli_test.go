@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io"
 	"os"
+	"reflect"
 	s "strings"
 	"testing"
 
@@ -16,7 +17,7 @@ func TestNewCliApp(t *testing.T) {
 		return nil
 	}
 
-	testApp := cli.NewCliApp(action)
+	testApp := cli.NewCliApp(&options.Options{}, action)
 	if testApp == nil {
 		t.Fatal("Expected Application to be not nil")
 	}
@@ -27,43 +28,6 @@ func TestNewCliApp(t *testing.T) {
 
 	if testApp.Options == nil {
 		t.Fatal("Expected Application Options to be not nil")
-	}
-}
-
-func TestRunDefault(t *testing.T) {
-	action := func(opts *options.Options) error {
-		return nil
-	}
-
-	old := os.Stdout // keep backup of the real stdout
-	r, w, _ := os.Pipe()
-	os.Stdout = w
-	outC := make(chan string)
-
-	// copy the output in a separate goroutine so printing can't block indefinitely
-	go func() {
-		var buf bytes.Buffer
-		io.Copy(&buf, r)
-		outC <- buf.String()
-	}()
-
-	testApp := cli.NewCliApp(action)
-	args := []string{"lambda-wrapper"}
-	err := testApp.Run(args)
-
-	// back to normal state
-	w.Close()
-	os.Stdout = old // restoring the real stdout
-	out := <-outC
-
-	if err != nil {
-		t.Fatal("Expected Application to be successfully run")
-	}
-
-	prefix := "Missing some of the required options:"
-
-	if !s.HasPrefix(out, prefix) {
-		t.Fatalf("\n>>> Expected:\n%s\n<<< to have prefix:\n%s", out, prefix)
 	}
 }
 
@@ -85,7 +49,7 @@ func TestRunHelp(t *testing.T) {
 		outC <- buf.String()
 	}()
 
-	testApp := cli.NewCliApp(action)
+	testApp := cli.NewCliApp(&options.Options{}, action)
 	args := []string{"lambda-wrapper", "--help"}
 	err := testApp.Run(args)
 
@@ -123,7 +87,7 @@ func TestRunVersion(t *testing.T) {
 		outC <- buf.String()
 	}()
 
-	testApp := cli.NewCliApp(action)
+	testApp := cli.NewCliApp(&options.Options{}, action)
 	args := []string{"lambda-wrapper", "--version"}
 	err := testApp.Run(args)
 
@@ -143,6 +107,43 @@ func TestRunVersion(t *testing.T) {
 	}
 }
 
+func TestRunDefault(t *testing.T) {
+	action := func(opts *options.Options) error {
+		return nil
+	}
+
+	old := os.Stdout // keep backup of the real stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+	outC := make(chan string)
+
+	// copy the output in a separate goroutine so printing can't block indefinitely
+	go func() {
+		var buf bytes.Buffer
+		io.Copy(&buf, r)
+		outC <- buf.String()
+	}()
+
+	testApp := cli.NewCliApp(&options.Options{}, action)
+	args := []string{"lambda-wrapper"}
+	err := testApp.Run(args)
+
+	// back to normal state
+	w.Close()
+	os.Stdout = old // restoring the real stdout
+	out := <-outC
+
+	if err != nil {
+		t.Fatal("Expected Application to be successfully run")
+	}
+
+	prefix := "Missing some of the required options:"
+
+	if !s.HasPrefix(out, prefix) {
+		t.Fatalf("\n>>> Expected:\n%s\n<<< to have prefix:\n%s", out, prefix)
+	}
+}
+
 func TestRun(t *testing.T) {
 	action := func(opts *options.Options) error {
 		if "AWS" != opts.Cloud {
@@ -153,8 +154,9 @@ func TestRun(t *testing.T) {
 			t.Fatalf("\n>>> Expected Engine:\n%s\n<<< but got:\n%s", "node", opts.Engine)
 		}
 
-		if len(opts.Services) > 0 {
-			t.Fatal("\n>>> Expected Services to be empty")
+		expectedServices := []string{"s3"}
+		if !reflect.DeepEqual(expectedServices, opts.Services) {
+			t.Fatalf("\n>>> Expected Services:\n%s\n<<< but got:\n%s", expectedServices, opts.Services)
 		}
 
 		if "npm" != opts.LibSource {
@@ -176,7 +178,14 @@ func TestRun(t *testing.T) {
 		return nil
 	}
 
-	testApp := cli.NewCliApp(action)
+	opts := &options.Options{
+		Cloud:     "AWS",
+		Engine:    "node",
+		Services:  []string{"s3"},
+		LibSource: "npm",
+	}
+
+	testApp := cli.NewCliApp(opts, action)
 	args := []string{"lambda-wrapper", "-N", "@foo/bar", "--output", "lambda.zip", "-t"}
 	err := testApp.Run(args)
 
