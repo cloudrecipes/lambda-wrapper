@@ -12,13 +12,13 @@ func TestReadFile(t *testing.T) {
 
 		if test.err != nil {
 			if err == nil || test.err.Error() != err.Error() {
-				t.Fatalf("Expected error to be %v but got %v", test.err, err)
+				t.Fatalf("\n>>> Expected error:\n%v\n<<< but got:\n%v", test.err, err)
 			}
 			continue
 		}
 
 		if test.expected != actual {
-			t.Fatalf("Expected %s but got %s", test.expected, actual)
+			t.Fatalf("\n>>> Expected:\n%s\n<<< but got:\n%s", test.expected, actual)
 		}
 	}
 }
