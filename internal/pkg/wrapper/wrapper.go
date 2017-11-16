@@ -3,11 +3,14 @@ package wrapper
 
 import (
 	"fmt"
-	"path"
 	s "strings"
 
-	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
+	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
 )
+
+type Wrapper interface {
+	Wrap(templateDir string, opts *options.Options) (string, error)
+}
 
 // TODO: currently this code explicitly works with AWS/Node lambdas
 //       only. Restructure package in a way, where every package
@@ -19,17 +22,6 @@ import (
 var awsservices = map[string]string{
 	"s3":  "new aws.S3({apiVersion: 'latest'})",
 	"sns": "new aws.SNS()",
-}
-
-// BuildTemplateFileName by cloud provider name and engine.
-func BuildTemplateFileName(cloud, engine string) string {
-	return fmt.Sprintf("%s-%s", cloud, engine)
-}
-
-// ReadTemplateFile reads teamplate file and returns it's content or error.
-func ReadTemplateFile(templatedir, filename string) (string, error) {
-	templatefile := path.Join(templatedir, filename)
-	return fs.ReadFile(templatefile)
 }
 
 // BuildWrapper takes teamplate payload and injects necessary dependencies into it
