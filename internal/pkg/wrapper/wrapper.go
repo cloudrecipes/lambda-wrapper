@@ -2,81 +2,23 @@
 package wrapper
 
 import (
-	"fmt"
-	"path"
-	s "strings"
-
-	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
+	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
+	utils "github.com/cloudrecipes/lambda-wrapper/internal/pkg/wrapper/utils"
 )
 
-// TODO: currently this code explicitly works with AWS/Node lambdas
-//       only. Restructure package in a way, where every package
-//       works with it's own cloud and engine.
-//       Refactoring: define common interface, and all other modules
-//       should implement an interface
-
-// awsservices is the map of supported services and handler initiators.
-var awsservices = map[string]string{
-	"s3":  "new aws.S3({apiVersion: 'latest'})",
-	"sns": "new aws.SNS()",
+// Wrapper generic interface for all types of wrappers.
+type Wrapper interface {
+	Wrap(template string, opts *options.Options) (string, error)
 }
 
-// BuildTemplateFileName by cloud provider name and engine.
-func BuildTemplateFileName(cloud, engine string) string {
-	return fmt.Sprintf("%s-%s", cloud, engine)
-}
+// Wrap reads template and wraps library into it.
+func Wrap(w Wrapper, opts *options.Options, templatedir string) (string, error) {
+	templatefile := utils.TemplateFileName(opts.Cloud, opts.Engine)
+	template, err := utils.ReadTemplateFile(templatedir, templatefile)
 
-// ReadTemplateFile reads teamplate file and returns it's content or error.
-func ReadTemplateFile(templatedir, filename string) (string, error) {
-	templatefile := path.Join(templatedir, filename)
-	return fs.ReadFile(templatefile)
-}
-
-// BuildWrapper takes teamplate payload and injects necessary dependencies into it
-// to build wrapper code.
-func BuildWrapper(template, libraryname string, services []string) string {
-	resultstr := template
-	resultstr = injectLibraryIntoTemplate(resultstr, libraryname)
-	resultstr = injectServicesIntoTemplate(resultstr, services)
-	return resultstr
-}
-
-// injectLibraryIntoTemplate injects libraryname into template.
-func injectLibraryIntoTemplate(template, libraryname string) string {
-	return s.Replace(template, "{{lib}}", libraryname, -1)
-}
-
-// injectServicesIntoTemplate injects services into template.
-func injectServicesIntoTemplate(template string, services []string) string {
-	resultstr := template
-	resultstr = s.Replace(resultstr, "{{aws}}", initiateAwsHandler(services), -1)
-	resultstr = s.Replace(resultstr, "{{services}}", initiateServiceHandlers(services), -1)
-	return resultstr
-}
-
-// initiateAwsHandler adds
-func initiateAwsHandler(services []string) string {
-	if len(services) == 0 {
-		return ""
+	if err != nil {
+		return "", err
 	}
 
-	return "const aws = require('aws-sdk')"
-}
-
-func initiateServiceHandlers(services []string) string {
-	if len(services) == 0 {
-		return ""
-	}
-
-	handlers := make([]string, len(services))
-	for i, v := range services {
-		handler, exists := awsservices[v]
-		if exists == true {
-			handlers[i] = fmt.Sprintf("services.%s = %s", v, handler)
-		} else {
-			handlers[i] = ""
-		}
-	}
-
-	return s.Join(handlers, "\n")
+	return w.Wrap(template, opts)
 }

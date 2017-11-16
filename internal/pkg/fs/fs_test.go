@@ -17,6 +17,10 @@ func TestReadFile(t *testing.T) {
 			continue
 		}
 
+		if test.err == nil && err != nil {
+			t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
+		}
+
 		if test.expected != actual {
 			t.Fatalf("\n>>> Expected:\n%s\n<<< but got:\n%s", test.expected, actual)
 		}

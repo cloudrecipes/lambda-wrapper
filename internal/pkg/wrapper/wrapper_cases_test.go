@@ -4,64 +4,33 @@ import (
 	"errors"
 	"os"
 	"path"
+
+	o "github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
 )
 
-var buildTemplateFileNameTestCases = []struct {
-	cloud    string // cloud provider name
-	engine   string // engine name
-	expected string // expected result
-}{
-	{"aws", "node", "aws-node"},
+type testWrapper struct{}
+
+func (w *testWrapper) Wrap(template string, opts *o.Options) (string, error) {
+	return "template wrapped", nil
 }
 
-var readTemplateFileTestCases = []struct {
+var wrapTestCases = []struct {
+	options     *o.Options
 	templatedir string
-	filename    string
 	err         error
 	expected    string
 }{
-	{"", "no_such_template_file.txt", errors.New("open no_such_template_file.txt: no such file or directory"), ""},
 	{
+		&o.Options{},
+		"",
+		errors.New("open -: no such file or directory"),
+		"",
+	},
+	{
+		&o.Options{Cloud: "AWS", Engine: "Node"},
 		path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
 			"lambda-wrapper", "test", "fixtures"),
-		"wrapper_readtemplatefile",
 		nil,
-		`// AWS SDK dependency
-{{aws}}
-
-// library dependency
-const handler = require('{{lib}}')
-
-const services = {}
-
-// initiate required AWS services
-{{services}}
-`,
-	},
-}
-
-var buildWrapperTestCases = []struct {
-	template    string   // wrapper template
-	libraryname string   // library name to inject to template
-	services    []string // services to initiate and inject to template
-	expected    string   // expected result
-}{
-	{
-		`// AWS SDK dependency
-{{aws}}
-// library dependency
-const handler = require('{{lib}}')
-const services = {}
-// initiate required AWS services
-{{services}}`,
-		"@foo/bar",
-		[]string{"s3"},
-		`// AWS SDK dependency
-const aws = require('aws-sdk')
-// library dependency
-const handler = require('@foo/bar')
-const services = {}
-// initiate required AWS services
-services.s3 = new aws.S3({apiVersion: 'latest'})`,
+		"template wrapped",
 	},
 }

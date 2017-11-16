@@ -1,4 +1,4 @@
-package wrapper
+package awswrapper
 
 import "testing"
 
