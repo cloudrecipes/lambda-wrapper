@@ -1,6 +1,8 @@
 package wrapper_test
 
 import (
+	"os"
+	"path"
 	"testing"
 
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/wrapper"
@@ -25,5 +27,15 @@ func TestWrap(t *testing.T) {
 		if test.expected != actual {
 			t.Fatalf("\n>>> Expected:\n%s\n<<< but got:\n%s", test.expected, actual)
 		}
+	}
+}
+
+func TestDefaultTemplateDir(t *testing.T) {
+	expected := path.Join(os.Getenv("GOPATH"), "src", "github.com",
+		"cloudrecipes", "lambda-wrapper", "assets", "templates")
+	actual := wrapper.DefaultTemplateDir()
+
+	if expected != actual {
+		t.Fatalf("\n>>> Expected:\n%s\n<<< but got:\n%s", expected, actual)
 	}
 }

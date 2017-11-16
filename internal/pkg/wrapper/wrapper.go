@@ -2,9 +2,16 @@
 package wrapper
 
 import (
+	"os"
+	"path"
+
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
 	utils "github.com/cloudrecipes/lambda-wrapper/internal/pkg/wrapper/utils"
 )
+
+// templatedir is the default template directory
+var templatedir = path.Join(os.Getenv("GOPATH"), "src", "github.com",
+	"cloudrecipes", "lambda-wrapper", "assets", "templates")
 
 // Wrapper generic interface for all types of wrappers.
 type Wrapper interface {
@@ -21,4 +28,9 @@ func Wrap(w Wrapper, opts *options.Options, templatedir string) (string, error) 
 	}
 
 	return w.Wrap(template, opts)
+}
+
+// DefaultTemplateDir returns default template directory.
+func DefaultTemplateDir() string {
+	return templatedir
 }
