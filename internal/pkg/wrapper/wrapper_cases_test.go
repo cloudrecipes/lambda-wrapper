@@ -1,27 +1,36 @@
 package wrapper_test
 
-var buildWrapperTestCases = []struct {
-	template    string   // wrapper template
-	libraryname string   // library name to inject to template
-	services    []string // services to initiate and inject to template
-	expected    string   // expected result
+import (
+	"errors"
+	"os"
+	"path"
+
+	o "github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
+)
+
+type testWrapper struct{}
+
+func (w *testWrapper) Wrap(template string, opts *o.Options) (string, error) {
+	return "template wrapped", nil
+}
+
+var wrapTestCases = []struct {
+	options     *o.Options
+	templatedir string
+	err         error
+	expected    string
 }{
 	{
-		`// AWS SDK dependency
-{{aws}}
-// library dependency
-const handler = require('{{lib}}')
-const services = {}
-// initiate required AWS services
-{{services}}`,
-		"@foo/bar",
-		[]string{"s3"},
-		`// AWS SDK dependency
-const aws = require('aws-sdk')
-// library dependency
-const handler = require('@foo/bar')
-const services = {}
-// initiate required AWS services
-services.s3 = new aws.S3({apiVersion: 'latest'})`,
+		&o.Options{},
+		"",
+		errors.New("open -: no such file or directory"),
+		"",
+	},
+	{
+		&o.Options{Cloud: "AWS", Engine: "Node"},
+		path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
+			"lambda-wrapper", "test", "fixtures"),
+		nil,
+		"template wrapped",
 	},
 }

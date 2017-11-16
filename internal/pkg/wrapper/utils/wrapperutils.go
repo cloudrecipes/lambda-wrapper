@@ -4,6 +4,7 @@ package wrapperutils
 import (
 	"fmt"
 	"path"
+	s "strings"
 
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
 )
@@ -11,7 +12,7 @@ import (
 // TemplateFileName returns template file name in regards to cloud provider name
 // and a lambda engine.
 func TemplateFileName(cloud, engine string) string {
-	return fmt.Sprintf("%s-%s", cloud, engine)
+	return fmt.Sprintf("%s-%s", s.ToLower(cloud), s.ToLower(engine))
 }
 
 // ReadTemplateFile reads teamplate file and returns it's content or error.

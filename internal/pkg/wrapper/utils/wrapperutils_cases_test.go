@@ -24,7 +24,7 @@ var readTemplateFileTestCases = []struct {
 	{
 		path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
 			"lambda-wrapper", "test", "fixtures"),
-		"wrapper_readtemplatefile",
+		"aws-node",
 		nil,
 		`// AWS SDK dependency
 {{aws}}

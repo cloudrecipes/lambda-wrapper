@@ -1,4 +1,4 @@
-package wrapper
+package awswrapper
 
 var injectLibraryIntoTemplateTestCases = []struct {
 	template    string // template payload
