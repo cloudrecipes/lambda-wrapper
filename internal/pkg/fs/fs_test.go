@@ -26,3 +26,25 @@ func TestReadFile(t *testing.T) {
 		}
 	}
 }
+
+func TestDirGetters(t *testing.T) {
+	var expected, actual string
+
+	expected = ".lwtmp"
+	actual = fs.WorkingDir()
+	if expected != actual {
+		t.Fatalf("\n>>> Expected:\n%s\n<<< but got:\n%s", expected, actual)
+	}
+
+	expected = ".lwtmp/lib"
+	actual = fs.LibDir()
+	if expected != actual {
+		t.Fatalf("\n>>> Expected:\n%s\n<<< but got:\n%s", expected, actual)
+	}
+
+	expected = ".lwtmp/build"
+	actual = fs.BuildDir()
+	if expected != actual {
+		t.Fatalf("\n>>> Expected:\n%s\n<<< but got:\n%s", expected, actual)
+	}
+}
