@@ -59,16 +59,15 @@ func TestMakeDirs(t *testing.T) {
 		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 
-	err = fs.MakeDirs(path.Join(basedir, "tmp"))
-	if err != nil {
+	if err = fs.MakeDirs(basedir); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 
-	if _, err = os.Stat(path.Join(basedir, "tmp", ".lwtmp")); os.IsNotExist(err) {
+	if _, err = os.Stat(path.Join(basedir, ".lwtmp")); os.IsNotExist(err) {
 		t.Fatal("\n>>> Expected working directory to be created")
 	}
 
-	if err = os.RemoveAll(path.Join(basedir, "tmp", ".lwtmp")); err != nil {
+	if err = os.RemoveAll(path.Join(basedir, ".lwtmp")); err != nil {
 		t.Fatal("\n>>> Expected to successfully clean up temporary directories")
 	}
 }
@@ -81,24 +80,20 @@ func TestRmDirs(t *testing.T) {
 		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 
-	if err = os.Mkdir(path.Join(basedir, "tmp", ".lwtmp"), os.ModePerm); err != nil {
+	if err = os.Mkdir(path.Join(basedir, ".lwtmp"), os.ModePerm); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil (.lwtmp) but got:\n%v", err)
 	}
 
-	if err = os.Mkdir(path.Join(basedir, "tmp", ".lwtmp", "lib"), os.ModePerm); err != nil {
-		t.Fatalf("\n>>> Expected err to be nil (.lwtmp/lib) but got:\n%v", err)
+	if err = os.Mkdir(path.Join(basedir, ".lwtmp", "blah"), os.ModePerm); err != nil {
+		t.Fatalf("\n>>> Expected err to be nil (.lwtmp/blah) but got:\n%v", err)
 	}
 
-	if err = os.Mkdir(path.Join(basedir, "tmp", ".lwtmp", "build"), os.ModePerm); err != nil {
-		t.Fatalf("\n>>> Expected err to be nil (.lwtmp/build) but got:\n%v", err)
-	}
-
-	err = fs.RmDirs(path.Join(basedir, "tmp"))
+	err = fs.RmDirs(basedir)
 	if err != nil {
 		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 
-	if _, err = os.Stat(path.Join(basedir, "tmp", ".lwtmp")); os.IsExist(err) {
+	if _, err = os.Stat(path.Join(basedir, ".lwtmp")); os.IsExist(err) {
 		t.Fatal("\n>>> Expected working directory to be deleted but it still exists")
 	}
 }
