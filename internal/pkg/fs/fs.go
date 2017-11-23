@@ -3,6 +3,7 @@ package fs
 
 import (
 	"io/ioutil"
+	"os"
 	"path"
 )
 
@@ -34,4 +35,28 @@ func LibDir() string {
 // BuildDir returns build directory name.
 func BuildDir() string {
 	return builddir
+}
+
+// MakeDirs creates necessary working directories (if directories exist they will overwritten).
+func MakeDirs(basedir string) error {
+	var err error
+
+	if err = os.Mkdir(path.Join(basedir, workingdir), os.ModePerm); err != nil {
+		return err
+	}
+
+	if err = os.Mkdir(path.Join(basedir, libdir), os.ModePerm); err != nil {
+		return err
+	}
+
+	if err = os.Mkdir(path.Join(basedir, builddir), os.ModePerm); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// RmDirs removes working directories.
+func RmDirs(basedir string) error {
+	return os.RemoveAll(path.Join(basedir, workingdir))
 }
