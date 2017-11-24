@@ -1,13 +1,24 @@
 package fs_test
 
 import (
-	"fmt"
 	"os"
 	"path"
 	"testing"
 
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
 )
+
+func createDummyDirStructure(basedir, headdir string) error {
+	if err := os.Mkdir(path.Join(basedir, headdir), os.ModePerm); err != nil {
+		return err
+	}
+
+	if err := os.Mkdir(path.Join(basedir, headdir, "blah"), os.ModePerm); err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func TestReadFile(t *testing.T) {
 	for _, test := range readFileTestCases {
@@ -53,58 +64,46 @@ func TestDirGetters(t *testing.T) {
 }
 
 func TestMakeDirs(t *testing.T) {
-	var err error
-
 	basedir := path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
 		"lambda-wrapper", "test", "tmp")
 
-	if err = fs.MakeDirs(basedir); err != nil {
+	if err := fs.MakeDirs(basedir); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 
-	if _, err = os.Stat(path.Join(basedir, ".lwtmp")); os.IsNotExist(err) {
+	if _, err := os.Stat(path.Join(basedir, ".lwtmp")); os.IsNotExist(err) {
 		t.Fatal("\n>>> Expected working directory to be created")
 	}
 
-	if err = os.RemoveAll(path.Join(basedir, ".lwtmp")); err != nil {
+	if err := os.RemoveAll(path.Join(basedir, ".lwtmp")); err != nil {
 		t.Fatal("\n>>> Expected to successfully clean up temporary directories")
 	}
 }
 
 func TestRmDirs(t *testing.T) {
-	var err error
-
 	basedir := path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
 		"lambda-wrapper", "test", "tmp")
 
-	if err = os.Mkdir(path.Join(basedir, ".lwtmp"), os.ModePerm); err != nil {
-		t.Fatalf("\n>>> Expected err to be nil (.lwtmp) but got:\n%v", err)
+	headdir := ".lwtmp"
+
+	if err := createDummyDirStructure(basedir, headdir); err != nil {
+		t.Fatalf("\n>>> Expected err to be nil but got:\n%v", err)
 	}
 
-	if err = os.Mkdir(path.Join(basedir, ".lwtmp", "blah"), os.ModePerm); err != nil {
-		t.Fatalf("\n>>> Expected err to be nil (.lwtmp/blah) but got:\n%v", err)
-	}
-
-	err = fs.RmDirs(basedir)
-	if err != nil {
+	if err := fs.RmDirs(basedir); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 
-	if _, err = os.Stat(path.Join(basedir, ".lwtmp")); os.IsExist(err) {
+	if _, err := os.Stat(path.Join(basedir, headdir)); os.IsExist(err) {
 		t.Fatal("\n>>> Expected working directory to be deleted but it still exists")
 	}
 }
 
 func TestZipDir(t *testing.T) {
-	var err error
-
 	basedir := path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
 		"lambda-wrapper", "test", "tmp")
 
-	fmt.Println(basedir)
-
-	err = fs.ZipDir(basedir, "test.zip")
-	if err != nil {
+	if err := fs.ZipDir(basedir, "test.zip"); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 
