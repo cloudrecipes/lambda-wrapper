@@ -1,7 +1,6 @@
 package fs_test
 
 import (
-	"fmt"
 	"os"
 	"path"
 	"testing"
@@ -14,30 +13,6 @@ const headdir string = ".lwtmp"
 
 var basedir = path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
 	"lambda-wrapper", "test", "tmp")
-
-func createDummyDirStructure(basedir, headdir string) error {
-	if err := os.Mkdir(path.Join(basedir, headdir), os.ModePerm); err != nil {
-		return err
-	}
-
-	if err := os.Mkdir(path.Join(basedir, headdir, "blah"), os.ModePerm); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func createFile(filename, payload string) error {
-	f, err := os.Create(filename)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	fmt.Fprint(f, payload)
-
-	return nil
-}
 
 func TestReadFile(t *testing.T) {
 	for _, test := range readFileTestCases {
@@ -96,6 +71,12 @@ func TestMakeDirs(t *testing.T) {
 	}
 }
 
+func TestMakeDirsErrorCase(t *testing.T) {
+	if err := fs.MakeDirs("blah"); err == nil {
+		t.Fatal("\n>>> Expected err not to be nil")
+	}
+}
+
 func TestRmDirs(t *testing.T) {
 	if err := createDummyDirStructure(basedir, headdir); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil but got:\n%v", err)
@@ -115,10 +96,8 @@ func TestZipDir(t *testing.T) {
 		t.Fatalf("\n>>> Expected err to be nil but got:\n%v", err)
 	}
 
-	for _, f := range filesToZip {
-		if err := createFile(f.filename, f.payload); err != nil {
-			t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
-		}
+	if err := createDummyFiles(); err != nil {
+		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 
 	if err := fs.ZipDir(basedir, "test.zip"); err != nil {

@@ -40,18 +40,16 @@ func BuildDir() string {
 
 // MakeDirs creates necessary working directories (if directories exist they will overwritten).
 func MakeDirs(basedir string) error {
-	var err error
-
-	if err = os.Mkdir(path.Join(basedir, workingdir), os.ModePerm); err != nil {
-		return err
+	dirs := []string{
+		path.Join(basedir, workingdir),
+		path.Join(basedir, libdir),
+		path.Join(basedir, builddir),
 	}
 
-	if err = os.Mkdir(path.Join(basedir, libdir), os.ModePerm); err != nil {
-		return err
-	}
-
-	if err = os.Mkdir(path.Join(basedir, builddir), os.ModePerm); err != nil {
-		return err
+	for _, dir := range dirs {
+		if err := os.Mkdir(dir, os.ModePerm); err != nil {
+			return err
+		}
 	}
 
 	return nil
