@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"path/filepath"
 )
 
 const workingdir string = ".lwtmp"
@@ -59,4 +60,31 @@ func MakeDirs(basedir string) error {
 // RmDirs removes working directories.
 func RmDirs(basedir string) error {
 	return os.RemoveAll(path.Join(basedir, workingdir))
+}
+
+// ZipDir archives directory.
+func ZipDir(source, target string) error {
+	var err error
+	// zipfile, err := os.Create(target)
+	// if err != nil {
+	// 	return err
+	// }
+	// defer zipfile.Close()
+	//
+	// archive := zip.NewWriter(zipfile)
+	// defer archive.Close()
+	//
+	if _, err = os.Stat(source); err != nil {
+		return err
+	}
+
+	err = filepath.Walk(source, func(path string, info os.FileInfo, err error) error {
+		// fmt.Println(path)
+		// fmt.Println(info)
+		// fmt.Println(err)
+		// fmt.Println("====")
+		return nil
+	})
+
+	return err
 }
