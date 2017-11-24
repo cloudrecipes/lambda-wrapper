@@ -23,3 +23,11 @@ var readFileTestCases = []struct {
 		"Hello Test!",
 	},
 }
+
+var filesToZip = []struct {
+	filename string
+	payload  string
+}{
+	{filename: path.Join(basedir, headdir, "file1.txt"), payload: "test file1"},
+	{filename: path.Join(basedir, headdir, "blah", "file2.txt"), payload: "test file2"},
+}

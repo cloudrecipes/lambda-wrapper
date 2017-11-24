@@ -1,12 +1,19 @@
 package fs_test
 
 import (
+	"fmt"
 	"os"
 	"path"
 	"testing"
 
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
 )
+
+// starting directory of dummy file structure
+const headdir string = ".lwtmp"
+
+var basedir = path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
+	"lambda-wrapper", "test", "tmp")
 
 func createDummyDirStructure(basedir, headdir string) error {
 	if err := os.Mkdir(path.Join(basedir, headdir), os.ModePerm); err != nil {
@@ -16,6 +23,18 @@ func createDummyDirStructure(basedir, headdir string) error {
 	if err := os.Mkdir(path.Join(basedir, headdir, "blah"), os.ModePerm); err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func createFile(filename, payload string) error {
+	f, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	fmt.Fprint(f, payload)
 
 	return nil
 }
@@ -64,28 +83,20 @@ func TestDirGetters(t *testing.T) {
 }
 
 func TestMakeDirs(t *testing.T) {
-	basedir := path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
-		"lambda-wrapper", "test", "tmp")
-
 	if err := fs.MakeDirs(basedir); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 
-	if _, err := os.Stat(path.Join(basedir, ".lwtmp")); os.IsNotExist(err) {
+	if _, err := os.Stat(path.Join(basedir, headdir)); os.IsNotExist(err) {
 		t.Fatal("\n>>> Expected working directory to be created")
 	}
 
-	if err := os.RemoveAll(path.Join(basedir, ".lwtmp")); err != nil {
+	if err := os.RemoveAll(path.Join(basedir, headdir)); err != nil {
 		t.Fatal("\n>>> Expected to successfully clean up temporary directories")
 	}
 }
 
 func TestRmDirs(t *testing.T) {
-	basedir := path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
-		"lambda-wrapper", "test", "tmp")
-
-	headdir := ".lwtmp"
-
 	if err := createDummyDirStructure(basedir, headdir); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil but got:\n%v", err)
 	}
@@ -100,12 +111,23 @@ func TestRmDirs(t *testing.T) {
 }
 
 func TestZipDir(t *testing.T) {
-	basedir := path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
-		"lambda-wrapper", "test", "tmp")
+	if err := createDummyDirStructure(basedir, headdir); err != nil {
+		t.Fatalf("\n>>> Expected err to be nil but got:\n%v", err)
+	}
+
+	for _, f := range filesToZip {
+		if err := createFile(f.filename, f.payload); err != nil {
+			t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
+		}
+	}
 
 	if err := fs.ZipDir(basedir, "test.zip"); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 
 	// TODO: check archive
+
+	if err := os.RemoveAll(path.Join(basedir, headdir)); err != nil {
+		t.Fatal("\n>>> Expected to successfully clean up temporary directories")
+	}
 }
