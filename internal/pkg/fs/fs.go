@@ -79,10 +79,10 @@ func ZipDir(source, target string) error {
 	}
 
 	err = filepath.Walk(source, func(path string, info os.FileInfo, err error) error {
-		// fmt.Println(path)
-		// fmt.Println(info)
-		// fmt.Println(err)
-		// fmt.Println("====")
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 

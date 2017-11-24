@@ -12,15 +12,15 @@ var readFileTestCases = []struct {
 	expected string // expected file payload
 }{
 	{
-		"no_such_file.txt",
-		errors.New("open no_such_file.txt: no such file or directory"),
-		"",
+		filename: "no_such_file.txt",
+		err:      errors.New("open no_such_file.txt: no such file or directory"),
+		expected: "",
 	},
 	{
-		path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
+		filename: path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
 			"lambda-wrapper", "test", "fixtures", "fs_readfile.txt"),
-		nil,
-		"Hello Test!",
+		err:      nil,
+		expected: "Hello Test!",
 	},
 }
 
