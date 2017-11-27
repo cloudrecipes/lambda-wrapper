@@ -100,13 +100,19 @@ func TestZipDir(t *testing.T) {
 		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 
-	if err := fs.ZipDir(basedir, "test.zip"); err != nil {
+	source := path.Join(basedir, headdir)
+	target := path.Join(basedir, "test.zip")
+	if err := fs.ZipDir(source, target); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 
 	// TODO: check archive
 
-	if err := os.RemoveAll(path.Join(basedir, headdir)); err != nil {
+	if err := os.RemoveAll(source); err != nil {
 		t.Fatal("\n>>> Expected to successfully clean up temporary directories")
+	}
+
+	if err := os.Remove(target); err != nil {
+		t.Fatal("\n>>> Expected to successfully clean up archive file")
 	}
 }

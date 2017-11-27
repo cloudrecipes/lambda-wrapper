@@ -2,10 +2,13 @@
 package fs
 
 import (
+	"archive/zip"
+	"io"
 	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 )
 
 const workingdir string = ".lwtmp"
@@ -63,26 +66,66 @@ func RmDirs(basedir string) error {
 // ZipDir archives directory.
 func ZipDir(source, target string) error {
 	var err error
-	// zipfile, err := os.Create(target)
-	// if err != nil {
-	// 	return err
-	// }
-	// defer zipfile.Close()
-	//
-	// archive := zip.NewWriter(zipfile)
-	// defer archive.Close()
-	//
-	if _, err = os.Stat(source); err != nil {
+	zipfile, err := os.Create(target)
+	if err != nil {
+		return err
+	}
+	defer zipfile.Close()
+
+	archive := zip.NewWriter(zipfile)
+	defer archive.Close()
+
+	info, err := os.Stat(source)
+	if err != nil {
 		return err
 	}
 
-	err = filepath.Walk(source, func(path string, info os.FileInfo, err error) error {
+	var basedir string
+	if info.IsDir() {
+		basedir = filepath.Base(source)
+	}
+
+	return filepath.Walk(source, filepathWalk(basedir, source, archive))
+}
+
+func filepathWalk(basedir, source string, archive *zip.Writer) func(path string, info os.FileInfo, err error) error {
+	return func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
 
-		return nil
-	})
+		header, err := zip.FileInfoHeader(info)
+		if err != nil {
+			return err
+		}
 
-	return err
+		if basedir != "" {
+			header.Name = filepath.Join(basedir, strings.TrimPrefix(path, source))
+		}
+
+		if info.IsDir() {
+			header.Name += "/"
+		} else {
+			header.Method = zip.Deflate
+		}
+
+		writer, err := archive.CreateHeader(header)
+		if err != nil {
+			return err
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		file, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+
+		_, err = io.Copy(writer, file)
+
+		return err
+	}
 }
