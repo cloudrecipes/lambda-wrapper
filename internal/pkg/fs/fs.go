@@ -16,6 +16,10 @@ const workingdir string = ".lwtmp"
 var libdir string = path.Join(workingdir, "lib")
 var builddir string = path.Join(workingdir, "build")
 
+type zipWriter interface {
+	CreateHeader(*zip.FileHeader) (io.Writer, error)
+}
+
 // ReadFile reterns fila content or error.
 func ReadFile(filename string) (string, error) {
 	payload, err := ioutil.ReadFile(filename)
@@ -88,16 +92,13 @@ func ZipDir(source, target string) error {
 	return filepath.Walk(source, filepathWalk(basedir, source, archive))
 }
 
-func filepathWalk(basedir, source string, archive *zip.Writer) func(path string, info os.FileInfo, err error) error {
+func filepathWalk(basedir, source string, archive zipWriter) func(path string, info os.FileInfo, err error) error {
 	return func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
 
-		header, err := zip.FileInfoHeader(info)
-		if err != nil {
-			return err
-		}
+		header, _ := zip.FileInfoHeader(info)
 
 		if basedir != "" {
 			header.Name = filepath.Join(basedir, strings.TrimPrefix(path, source))
