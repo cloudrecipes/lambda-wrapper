@@ -8,15 +8,15 @@ var wrapperTestCases = []struct {
 	expected string // expected result
 }{
 	{
-		`// AWS SDK dependency
+		template: `// AWS SDK dependency
 {{aws}}
 // library dependency
 const handler = require('{{lib}}')
 const services = {}
 // initiate required AWS services
 {{services}}`,
-		&o.Options{LibName: "@foo/bar", Services: []string{"s3"}},
-		`// AWS SDK dependency
+		options: &o.Options{LibName: "@foo/bar", Services: []string{"s3"}},
+		expected: `// AWS SDK dependency
 const aws = require('aws-sdk')
 // library dependency
 const handler = require('@foo/bar')

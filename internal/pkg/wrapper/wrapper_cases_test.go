@@ -21,16 +21,16 @@ var wrapTestCases = []struct {
 	expected    string
 }{
 	{
-		&o.Options{},
-		"",
-		errors.New("open -: no such file or directory"),
-		"",
+		options:     &o.Options{},
+		templatedir: "",
+		err:         errors.New("open -: no such file or directory"),
+		expected:    "",
 	},
 	{
-		&o.Options{Cloud: "AWS", Engine: "Node"},
-		path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
+		options: &o.Options{Cloud: "AWS", Engine: "Node"},
+		templatedir: path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
 			"lambda-wrapper", "test", "fixtures"),
-		nil,
-		"template wrapped",
+		err:      nil,
+		expected: "template wrapped",
 	},
 }

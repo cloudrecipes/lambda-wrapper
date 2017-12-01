@@ -12,14 +12,31 @@ var readFileTestCases = []struct {
 	expected string // expected file payload
 }{
 	{
-		"no_such_file.txt",
-		errors.New("open no_such_file.txt: no such file or directory"),
-		"",
+		filename: "no_such_file.txt",
+		err:      errors.New("open no_such_file.txt: no such file or directory"),
+		expected: "",
 	},
 	{
-		path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
+		filename: path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
 			"lambda-wrapper", "test", "fixtures", "fs_readfile.txt"),
-		nil,
-		"Hello Test!",
+		err:      nil,
+		expected: "Hello Test!",
 	},
+}
+
+var filesToZip = []struct {
+	filename string
+	payload  string
+}{
+	{filename: path.Join(basedir, headdir, "file1.txt"), payload: "test file1"},
+	{filename: path.Join(basedir, headdir, "blah", "file2.txt"), payload: "test file2"},
+}
+
+var zipDirErrorTestCases = []struct {
+	source   string
+	target   string
+	expected error
+}{
+	{source: "", target: "", expected: errors.New("open : no such file or directory")},
+	{source: "", target: path.Join(basedir, "test.zip"), expected: errors.New("stat : no such file or directory")},
 }

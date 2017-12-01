@@ -3,10 +3,17 @@ package fs_test
 import (
 	"os"
 	"path"
+	s "strings"
 	"testing"
 
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
 )
+
+// starting directory of dummy file structure
+const headdir string = ".lwtmp"
+
+var basedir = path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
+	"lambda-wrapper", "test", "tmp")
 
 func TestReadFile(t *testing.T) {
 	for _, test := range readFileTestCases {
@@ -52,48 +59,77 @@ func TestDirGetters(t *testing.T) {
 }
 
 func TestMakeDirs(t *testing.T) {
-	var basedir string
-	var err error
-
-	if basedir, err = os.Getwd(); err != nil {
+	if err := fs.MakeDirs(basedir); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 
-	if err = fs.MakeDirs(basedir); err != nil {
-		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
-	}
-
-	if _, err = os.Stat(path.Join(basedir, ".lwtmp")); os.IsNotExist(err) {
+	if _, err := os.Stat(path.Join(basedir, headdir)); os.IsNotExist(err) {
 		t.Fatal("\n>>> Expected working directory to be created")
 	}
 
-	if err = os.RemoveAll(path.Join(basedir, ".lwtmp")); err != nil {
+	if err := os.RemoveAll(path.Join(basedir, headdir)); err != nil {
 		t.Fatal("\n>>> Expected to successfully clean up temporary directories")
 	}
 }
 
+func TestMakeDirsErrorCase(t *testing.T) {
+	if err := fs.MakeDirs("blah"); err == nil {
+		t.Fatal("\n>>> Expected err not to be nil")
+	}
+}
+
 func TestRmDirs(t *testing.T) {
-	var basedir string
-	var err error
+	if err := createDummyDirStructure(basedir, headdir); err != nil {
+		t.Fatalf("\n>>> Expected err to be nil but got:\n%v", err)
+	}
 
-	if basedir, err = os.Getwd(); err != nil {
+	if err := fs.RmDirs(basedir); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 
-	if err = os.Mkdir(path.Join(basedir, ".lwtmp"), os.ModePerm); err != nil {
-		t.Fatalf("\n>>> Expected err to be nil (.lwtmp) but got:\n%v", err)
-	}
-
-	if err = os.Mkdir(path.Join(basedir, ".lwtmp", "blah"), os.ModePerm); err != nil {
-		t.Fatalf("\n>>> Expected err to be nil (.lwtmp/blah) but got:\n%v", err)
-	}
-
-	err = fs.RmDirs(basedir)
-	if err != nil {
-		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
-	}
-
-	if _, err = os.Stat(path.Join(basedir, ".lwtmp")); os.IsExist(err) {
+	if _, err := os.Stat(path.Join(basedir, headdir)); os.IsExist(err) {
 		t.Fatal("\n>>> Expected working directory to be deleted but it still exists")
+	}
+}
+
+func TestZipDir(t *testing.T) {
+	if err := createDummyDirStructure(basedir, headdir); err != nil {
+		t.Fatalf("\n>>> Expected err to be nil but got:\n%v", err)
+	}
+
+	if err := createDummyFiles(); err != nil {
+		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
+	}
+
+	source := path.Join(basedir, headdir)
+	target := path.Join(basedir, "test.zip")
+	if err := fs.ZipDir(source, target); err != nil {
+		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
+	}
+
+	// TODO: check archive
+
+	if err := os.RemoveAll(source); err != nil {
+		t.Fatal("\n>>> Expected to successfully clean up temporary directories")
+	}
+
+	if err := os.Remove(target); err != nil {
+		t.Fatal("\n>>> Expected to successfully clean up archive file")
+	}
+}
+
+func TestZipDirError(t *testing.T) {
+	for _, test := range zipDirErrorTestCases {
+		actual := fs.ZipDir(test.source, test.target)
+
+		if s.Compare(test.expected.Error(), actual.Error()) != 0 {
+			t.Fatalf("\n>>> Expected:\n%v\n<<< but got:\n%v", test.expected, actual)
+		}
+
+		if s.Compare("", test.target) != 0 {
+			if err := os.Remove(test.target); err != nil {
+				t.Fatal("\n>>> Expected to successfully clean up archive file")
+			}
+		}
 	}
 }

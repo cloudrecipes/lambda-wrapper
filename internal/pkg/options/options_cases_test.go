@@ -11,26 +11,26 @@ var validateTestCases = []struct {
 	expected  error  // expected validation error
 }{
 	{
-		"", "", "", "", "",
-		errors.New("Missing some of the required options: cloud, engine, libsource, libname, output"),
+		cloud: "", engine: "", libsource: "", libname: "", output: "",
+		expected: errors.New("Missing some of the required options: cloud, engine, libsource, libname, output"),
 	},
 	{
-		"AWS", "", "", "", "",
-		errors.New("Missing some of the required options: engine, libsource, libname, output"),
+		cloud: "AWS", engine: "", libsource: "", libname: "", output: "",
+		expected: errors.New("Missing some of the required options: engine, libsource, libname, output"),
 	},
 	{
-		"AWS", "node", "", "", "",
-		errors.New("Missing some of the required options: libsource, libname, output"),
+		cloud: "AWS", engine: "node", libsource: "", libname: "", output: "",
+		expected: errors.New("Missing some of the required options: libsource, libname, output"),
 	},
 	{
-		"AWS", "node", "npm", "", "",
-		errors.New("Missing some of the required options: libname, output"),
+		cloud: "AWS", engine: "node", libsource: "npm", libname: "", output: "",
+		expected: errors.New("Missing some of the required options: libname, output"),
 	},
 	{
-		"AWS", "node", "npm", "foo/bar", "",
-		errors.New("Missing some of the required options: output"),
+		cloud: "AWS", engine: "node", libsource: "npm", libname: "foo/bar", output: "",
+		expected: errors.New("Missing some of the required options: output"),
 	},
 	{
-		"AWS", "node", "npm", "foo/bar", "lambda.zip", nil,
+		cloud: "AWS", engine: "node", libsource: "npm", libname: "foo/bar", output: "lambda.zip", expected: nil,
 	},
 }

@@ -11,7 +11,7 @@ var templateFileNameTestCases = []struct {
 	engine   string // engine name
 	expected string // expected result
 }{
-	{"aws", "node", "aws-node"},
+	{cloud: "aws", engine: "node", expected: "aws-node"},
 }
 
 var readTemplateFileTestCases = []struct {
@@ -20,13 +20,18 @@ var readTemplateFileTestCases = []struct {
 	err         error  // expected error
 	expected    string // expected result
 }{
-	{"", "no_such_template_file.txt", errors.New("open no_such_template_file.txt: no such file or directory"), ""},
 	{
-		path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
+		templatedir: "",
+		filename:    "no_such_template_file.txt",
+		err:         errors.New("open no_such_template_file.txt: no such file or directory"),
+		expected:    "",
+	},
+	{
+		templatedir: path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
 			"lambda-wrapper", "test", "fixtures"),
-		"aws-node",
-		nil,
-		`// AWS SDK dependency
+		filename: "aws-node",
+		err:      nil,
+		expected: `// AWS SDK dependency
 {{aws}}
 
 // library dependency
