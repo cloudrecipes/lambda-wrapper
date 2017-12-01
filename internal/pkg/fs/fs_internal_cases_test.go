@@ -19,6 +19,17 @@ var _ zipWriter = (*BrokenZipWriter)(nil)
 
 var brokenZipWriter = &BrokenZipWriter{}
 
+type ValidZipWriter struct{}
+
+func (w *ValidZipWriter) CreateHeader(*zip.FileHeader) (io.Writer, error) {
+	return nil, nil
+}
+
+// make sure it satisfies the interface
+var _ zipWriter = (*ValidZipWriter)(nil)
+
+var validZipWriter = &ValidZipWriter{}
+
 type TestFileInfo struct{}
 
 func (i *TestFileInfo) Name() string {
@@ -60,4 +71,5 @@ var filepathWalkTestCases = []struct {
 }{
 	{basedir: "", source: "", archive: nil, path: "", info: nil, err: errors.New("Test Error"), expected: errors.New("Test Error")},
 	{basedir: "", source: "", archive: brokenZipWriter, path: "blah", info: testFileInfo, err: nil, expected: errors.New("Create Header Error")},
+	{basedir: "", source: "", archive: validZipWriter, path: "blah", info: testFileInfo, err: nil, expected: errors.New("open blah: no such file or directory")},
 }
