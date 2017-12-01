@@ -3,6 +3,7 @@ package fs_test
 import (
 	"os"
 	"path"
+	s "strings"
 	"testing"
 
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
@@ -114,5 +115,21 @@ func TestZipDir(t *testing.T) {
 
 	if err := os.Remove(target); err != nil {
 		t.Fatal("\n>>> Expected to successfully clean up archive file")
+	}
+}
+
+func TestZipDirError(t *testing.T) {
+	for _, test := range zipDirErrorTestCases {
+		actual := fs.ZipDir(test.source, test.target)
+
+		if s.Compare(test.expected.Error(), actual.Error()) != 0 {
+			t.Fatalf("\n>>> Expected:\n%v\n<<< but got:\n%v", test.expected, actual)
+		}
+
+		if s.Compare("", test.target) != 0 {
+			if err := os.Remove(test.target); err != nil {
+				t.Fatal("\n>>> Expected to successfully clean up archive file")
+			}
+		}
 	}
 }

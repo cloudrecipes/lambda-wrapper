@@ -31,3 +31,12 @@ var filesToZip = []struct {
 	{filename: path.Join(basedir, headdir, "file1.txt"), payload: "test file1"},
 	{filename: path.Join(basedir, headdir, "blah", "file2.txt"), payload: "test file2"},
 }
+
+var zipDirErrorTestCases = []struct {
+	source   string
+	target   string
+	expected error
+}{
+	{source: "", target: "", expected: errors.New("open : no such file or directory")},
+	{source: "", target: path.Join(basedir, "test.zip"), expected: errors.New("stat : no such file or directory")},
+}
