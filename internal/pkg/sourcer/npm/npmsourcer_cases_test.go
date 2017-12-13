@@ -4,5 +4,5 @@ var sourcerTestCases = []struct {
 	libname string
 	err     error
 }{
-// {libname: "tttt", err: errors.New("package not found")},
+// {libname: "package-not-found", err: errors.New("package not found")},
 }
