@@ -1,4 +1,4 @@
-package gitsourcer_test
+package npmsourcer_test
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"path"
 	"testing"
 
-	s "github.com/cloudrecipes/lambda-wrapper/internal/pkg/sourcer/git"
+	s "github.com/cloudrecipes/lambda-wrapper/internal/pkg/sourcer/npm"
 )
 
 // starting directory of dummy file structure
@@ -38,15 +38,10 @@ func TestMain(m *testing.M) {
 }
 
 func TestLibGet(t *testing.T) {
-	sourcer := &s.GitSourcer{}
+	sourcer := &s.NpmSourcer{}
 
 	for _, test := range sourcerTestCases {
 		err := sourcer.LibGet(test.libname, destinationdir)
-
-		// remove .git directory to avoid git clone errors
-		if err := os.RemoveAll(path.Join(destinationdir, ".git")); err != nil {
-			t.Fatal("\n>>> Expected to successfully clean up temporary directories")
-		}
 
 		if test.err != nil {
 			if err == nil || test.err.Error() != err.Error() {
