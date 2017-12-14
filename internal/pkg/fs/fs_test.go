@@ -1,6 +1,7 @@
 package fs_test
 
 import (
+	"fmt"
 	"os"
 	"path"
 	s "strings"
@@ -14,6 +15,23 @@ const headdir string = ".lwtmp"
 
 var basedir = path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
 	"lambda-wrapper", "test", "tmp")
+
+var destinationdir = path.Join(basedir, headdir)
+
+func TestMain(m *testing.M) {
+	if err := os.RemoveAll(destinationdir); err != nil {
+		fmt.Println("\n>>> Expected to successfully clean up temporary directories before test")
+		os.Exit(1)
+	}
+
+	code := m.Run()
+
+	if err := os.RemoveAll(destinationdir); err != nil {
+		fmt.Println("\n>>> Temporary directories could not be cleaned")
+	}
+
+	os.Exit(code)
+}
 
 func TestReadFile(t *testing.T) {
 	for _, test := range readFileTestCases {

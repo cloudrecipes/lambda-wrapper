@@ -9,6 +9,7 @@ type NpmSourcer struct{}
 // LibGet gets library source from Npm.
 func (s *NpmSourcer) LibGet(libname, destination string) error {
 	cmd := exec.Command("npm", "install", libname)
+	cmd.Dir = destination
 	err := cmd.Run()
 	return err
 }
