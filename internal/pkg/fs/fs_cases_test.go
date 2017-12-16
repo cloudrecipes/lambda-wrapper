@@ -4,6 +4,8 @@ import (
 	"errors"
 	"os"
 	"path"
+
+	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
 )
 
 var readFileTestCases = []struct {
@@ -28,8 +30,8 @@ var filesToZip = []struct {
 	filename string
 	payload  string
 }{
-	{filename: path.Join(basedir, headdir, "file1.txt"), payload: "test file1"},
-	{filename: path.Join(basedir, headdir, "blah", "file2.txt"), payload: "test file2"},
+	{filename: path.Join(tu.Testdir, "file1.txt"), payload: "test file1"},
+	{filename: path.Join(tu.Testdir, "blah", "file2.txt"), payload: "test file2"},
 }
 
 var zipDirErrorTestCases = []struct {
@@ -38,5 +40,5 @@ var zipDirErrorTestCases = []struct {
 	expected error
 }{
 	{source: "", target: "", expected: errors.New("open : no such file or directory")},
-	{source: "", target: path.Join(basedir, "test.zip"), expected: errors.New("stat : no such file or directory")},
+	{source: "", target: path.Join(tu.Basedir, "test.zip"), expected: errors.New("stat : no such file or directory")},
 }
