@@ -20,3 +20,8 @@ func (s *GitSourcer) LibGet(libname, destination string) error {
 func (s *GitSourcer) LibTest(location string) error {
 	return nil
 }
+
+// LibDeps installs library's dependencies.
+func (s *GitSourcer) LibDeps(location string, isprod bool) error {
+	return nil
+}

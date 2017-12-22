@@ -21,3 +21,8 @@ func (s *NpmSourcer) LibTest(location string) error {
 	err := cmd.Run()
 	return err
 }
+
+// LibDeps installs library's dependencies via npm.
+func (s *NpmSourcer) LibDeps(location string, isprod bool) error {
+	return nil
+}
