@@ -13,3 +13,11 @@ func (s *NpmSourcer) LibGet(libname, destination string) error {
 	err := cmd.Run()
 	return err
 }
+
+// LibTest runs tests defined in library.
+func (s *NpmSourcer) LibTest(location string) error {
+	cmd := exec.Command("npm", "test")
+	cmd.Dir = location
+	err := cmd.Run()
+	return err
+}
