@@ -51,7 +51,7 @@ func TestLibGet(t *testing.T) {
 
 func TestLibTest(t *testing.T) {
 	err := sourcer.LibTest(tu.Testdir)
-	if err != nil {
-		t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
+	if err == nil {
+		t.Fatalf("\n>>> Expected error not nil")
 	}
 }
