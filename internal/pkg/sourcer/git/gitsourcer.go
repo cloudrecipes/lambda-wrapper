@@ -15,3 +15,8 @@ func (s *GitSourcer) LibGet(libname, destination string) error {
 
 	return err
 }
+
+// LibTest runs tests defined in library.
+func (s *GitSourcer) LibTest(location string) error {
+	return nil
+}

@@ -9,6 +9,8 @@ import (
 	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
 )
 
+var sourcer *s.NpmSourcer
+
 func TestMain(m *testing.M) {
 	if err := os.RemoveAll(tu.Testdir); err != nil {
 		fmt.Println("\n>>> Expected to successfully clean up temporary directories before test")
@@ -20,6 +22,7 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
+	sourcer = &s.NpmSourcer{}
 	code := m.Run()
 
 	if err := os.RemoveAll(tu.Testdir); err != nil {
@@ -30,8 +33,6 @@ func TestMain(m *testing.M) {
 }
 
 func TestLibGet(t *testing.T) {
-	sourcer := &s.NpmSourcer{}
-
 	for _, test := range sourcerTestCases {
 		err := sourcer.LibGet(test.libname, tu.Testdir)
 
@@ -45,5 +46,12 @@ func TestLibGet(t *testing.T) {
 		if test.err == nil && err != nil {
 			t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
 		}
+	}
+}
+
+func TestLibTest(t *testing.T) {
+	err := sourcer.LibTest(tu.Testdir)
+	if err != nil {
+		t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
 	}
 }

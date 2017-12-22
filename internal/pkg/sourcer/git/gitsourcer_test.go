@@ -3,12 +3,13 @@ package gitsourcer_test
 import (
 	"fmt"
 	"os"
-	"path"
 	"testing"
 
 	s "github.com/cloudrecipes/lambda-wrapper/internal/pkg/sourcer/git"
 	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
 )
+
+var sourcer *s.GitSourcer
 
 func TestMain(m *testing.M) {
 	if err := os.RemoveAll(tu.Testdir); err != nil {
@@ -21,6 +22,7 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
+	sourcer = &s.GitSourcer{}
 	code := m.Run()
 
 	if err := os.RemoveAll(tu.Testdir); err != nil {
@@ -31,15 +33,13 @@ func TestMain(m *testing.M) {
 }
 
 func TestLibGet(t *testing.T) {
-	sourcer := &s.GitSourcer{}
-
 	for _, test := range sourcerTestCases {
-		err := sourcer.LibGet(test.libname, tu.Testdir)
+		// // remove .git directory to avoid git clone errors
+		// if err := os.RemoveAll(path.Join(tu.Testdir, ".git")); err != nil {
+		// 	t.Fatal("\n>>> Expected to successfully clean up temporary directories")
+		// }
 
-		// remove .git directory to avoid git clone errors
-		if err := os.RemoveAll(path.Join(tu.Testdir, ".git")); err != nil {
-			t.Fatal("\n>>> Expected to successfully clean up temporary directories")
-		}
+		err := sourcer.LibGet(test.libname, tu.Testdir)
 
 		if test.err != nil {
 			if err == nil || test.err.Error() != err.Error() {
@@ -51,5 +51,12 @@ func TestLibGet(t *testing.T) {
 		if test.err == nil && err != nil {
 			t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
 		}
+	}
+}
+
+func TestLibTest(t *testing.T) {
+	err := sourcer.LibTest(tu.Testdir)
+	if err != nil {
+		t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
 	}
 }
