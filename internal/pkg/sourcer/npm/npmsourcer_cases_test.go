@@ -10,3 +10,11 @@ var sourcerTestCases = []struct {
 	// Please, do not commit it, use this test case only locally
 	// {libname: "@antklim/api-to-cloud", err: nil},
 }
+
+var depsTestCases = []struct {
+	isprod bool
+	err    error
+}{
+	{isprod: false, err: nil},
+	{isprod: true, err: nil},
+}

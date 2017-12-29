@@ -55,3 +55,20 @@ func TestLibTest(t *testing.T) {
 		t.Fatalf("\n>>> Expected error not nil")
 	}
 }
+
+func TestLibDeps(t *testing.T) {
+	for _, test := range depsTestCases {
+		err := sourcer.LibDeps(tu.Testdir, test.isprod)
+
+		if test.err != nil {
+			if err == nil || test.err.Error() != err.Error() {
+				t.Fatalf("\n>>> Expected error:\n%v\n<<< but got:\n%v", test.err, err)
+			}
+			continue
+		}
+
+		if test.err == nil && err != nil {
+			t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
+		}
+	}
+}
