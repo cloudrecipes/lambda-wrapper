@@ -60,3 +60,10 @@ func TestLibTest(t *testing.T) {
 		t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
 	}
 }
+
+func TestLibDeps(t *testing.T) {
+	err := sourcer.LibDeps(tu.Testdir, false)
+	if err != nil {
+		t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
+	}
+}
