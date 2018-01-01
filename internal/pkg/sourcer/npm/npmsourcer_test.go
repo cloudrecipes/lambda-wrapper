@@ -34,7 +34,7 @@ func TestMain(m *testing.M) {
 
 func TestLibGet(t *testing.T) {
 	for _, test := range sourcerTestCases {
-		err := sourcer.LibGet(test.libname, tu.Testdir)
+		_, err := sourcer.LibGet(test.libname, tu.Testdir)
 
 		if test.err != nil {
 			if err == nil || test.err.Error() != err.Error() {
@@ -50,7 +50,7 @@ func TestLibGet(t *testing.T) {
 }
 
 func TestLibTest(t *testing.T) {
-	err := sourcer.LibTest(tu.Testdir)
+	_, err := sourcer.LibTest(tu.Testdir)
 	if err == nil {
 		t.Fatalf("\n>>> Expected error not nil")
 	}
@@ -58,7 +58,7 @@ func TestLibTest(t *testing.T) {
 
 func TestLibDeps(t *testing.T) {
 	for _, test := range depsTestCases {
-		err := sourcer.LibDeps(tu.Testdir, test.isprod)
+		_, err := sourcer.LibDeps(tu.Testdir, test.isprod)
 
 		if test.err != nil {
 			if err == nil || test.err.Error() != err.Error() {

@@ -39,7 +39,7 @@ func TestLibGet(t *testing.T) {
 		// 	t.Fatal("\n>>> Expected to successfully clean up temporary directories")
 		// }
 
-		err := sourcer.LibGet(test.libname, tu.Testdir)
+		_, err := sourcer.LibGet(test.libname, tu.Testdir)
 
 		if test.err != nil {
 			if err == nil || test.err.Error() != err.Error() {
@@ -55,14 +55,14 @@ func TestLibGet(t *testing.T) {
 }
 
 func TestLibTest(t *testing.T) {
-	err := sourcer.LibTest(tu.Testdir)
+	_, err := sourcer.LibTest(tu.Testdir)
 	if err != nil {
 		t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
 	}
 }
 
 func TestLibDeps(t *testing.T) {
-	err := sourcer.LibDeps(tu.Testdir, false)
+	_, err := sourcer.LibDeps(tu.Testdir, false)
 	if err != nil {
 		t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
 	}

@@ -7,32 +7,36 @@ import "os/exec"
 type NpmSourcer struct{}
 
 // LibGet gets library source from Npm.
-func (s *NpmSourcer) LibGet(libname, destination string) error {
+func (s *NpmSourcer) LibGet(libname, destination string) ([]byte, error) {
 	cmd := exec.Command("npm", "install", libname)
 	cmd.Dir = destination
-	err := cmd.Run()
-	return err
+	return cmd.CombinedOutput()
 }
 
 // LibTest runs tests defined in library.
-func (s *NpmSourcer) LibTest(location string) error {
+func (s *NpmSourcer) LibTest(location string) ([]byte, error) {
 	cmd := exec.Command("npm", "test")
 	cmd.Dir = location
-	err := cmd.Run()
-	return err
+	return cmd.CombinedOutput()
 }
 
 // LibDeps installs library's dependencies via npm.
-func (s *NpmSourcer) LibDeps(location string, isprod bool) error {
-	var cmd *exec.Cmd
-
+func (s *NpmSourcer) LibDeps(location string, isprod bool) ([]byte, error) {
 	if isprod {
-		cmd = exec.Command("npm", "install", "--prod")
-	} else {
-		cmd = exec.Command("npm", "install")
+		return libDepsProd(location)
 	}
 
+	return libDepsDefault(location)
+}
+
+func libDepsDefault(location string) ([]byte, error) {
+	cmd := exec.Command("npm", "install")
 	cmd.Dir = location
-	err := cmd.Run()
-	return err
+	return cmd.CombinedOutput()
+}
+
+func libDepsProd(location string) ([]byte, error) {
+	cmd := exec.Command("npm", "install", "--prod")
+	cmd.Dir = location
+	return cmd.CombinedOutput()
 }
