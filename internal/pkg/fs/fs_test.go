@@ -100,7 +100,7 @@ func TestMakeDirsErrorCase(t *testing.T) {
 }
 
 func TestRmDirs(t *testing.T) {
-	if err := tu.CreateDummyDirStructure(); err != nil {
+	if err := tu.CreateTestDirStructure(); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil but got:\n%v", err)
 	}
 
@@ -114,7 +114,7 @@ func TestRmDirs(t *testing.T) {
 }
 
 func TestZipDir(t *testing.T) {
-	if err := tu.CreateDummyDirStructure(); err != nil {
+	if err := tu.CreateTestDirStructure(); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil but got:\n%v", err)
 	}
 

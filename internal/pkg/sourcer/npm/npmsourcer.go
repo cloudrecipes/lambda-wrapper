@@ -1,38 +1,33 @@
 // Package npmsourcer implements library download/test operations from npm based sources.
 package npmsourcer
 
-import "os/exec"
+import (
+	cmd "github.com/cloudrecipes/lambda-wrapper/internal/pkg/commander"
+)
 
 // NpmSourcer structure.
 type NpmSourcer struct{}
 
+var command = "npm"
+
 // LibGet gets library source from Npm.
-func (s *NpmSourcer) LibGet(libname, destination string) error {
-	cmd := exec.Command("npm", "install", libname)
-	cmd.Dir = destination
-	err := cmd.Run()
-	return err
+func (s *NpmSourcer) LibGet(c cmd.Commander, libname, workingdir string) ([]byte, error) {
+	args := []string{workingdir, "install", libname}
+	return c.CombinedOutput(command, args...)
 }
 
 // LibTest runs tests defined in library.
-func (s *NpmSourcer) LibTest(location string) error {
-	cmd := exec.Command("npm", "test")
-	cmd.Dir = location
-	err := cmd.Run()
-	return err
+func (s *NpmSourcer) LibTest(c cmd.Commander, workingdir string) ([]byte, error) {
+	args := []string{workingdir, "test"}
+	return c.CombinedOutput(command, args...)
 }
 
 // LibDeps installs library's dependencies via npm.
-func (s *NpmSourcer) LibDeps(location string, isprod bool) error {
-	var cmd *exec.Cmd
-
+func (s *NpmSourcer) LibDeps(c cmd.Commander, workingdir string, isprod bool) ([]byte, error) {
+	args := []string{workingdir, "install"}
 	if isprod {
-		cmd = exec.Command("npm", "install", "--prod")
-	} else {
-		cmd = exec.Command("npm", "install")
+		args = append(args, "--prod")
 	}
 
-	cmd.Dir = location
-	err := cmd.Run()
-	return err
+	return c.CombinedOutput(command, args...)
 }
