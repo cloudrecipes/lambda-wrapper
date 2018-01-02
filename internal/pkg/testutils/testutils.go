@@ -3,6 +3,7 @@ package testutils
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path"
 )
 
@@ -16,8 +17,12 @@ const Headdir string = ".lwtmp"
 // Testdir is a testing directory in Basedir.
 var Testdir = path.Join(Basedir, Headdir)
 
-// CreateDummyDirStructure creates directory structure in Testdir.
-func CreateDummyDirStructure() error {
+// CreateTestDirStructure creates directory structure in Testdir.
+func CreateTestDirStructure() error {
+	if err := os.RemoveAll(Testdir); err != nil {
+		return err
+	}
+
 	if err := os.Mkdir(Testdir, os.ModePerm); err != nil {
 		return err
 	}
@@ -40,4 +45,26 @@ func CreateFile(filename, payload string) error {
 	fmt.Fprint(f, payload)
 
 	return nil
+}
+
+// TestCommander is a test implementation of the Commander interface.
+type TestCommander struct {
+	EnvVars []string
+}
+
+// CombinedOutput creates mock of Commander.
+// TODO: WIP - finish it!!!
+func (c TestCommander) CombinedOutput(command string, args ...string) ([]byte, error) {
+	cs := []string{"-test.run=TestHelperProcess", "--", command}
+	cs = append(cs, args...)
+	cmd := exec.Command(os.Args[0], cs...)
+	env := []string{"GO_WANT_HELPER_PROCESS=1"}
+
+	for _, v := range c.EnvVars {
+		env = append(env, v)
+	}
+
+	cmd.Env = env
+	out, err := cmd.CombinedOutput()
+	return out, err
 }
