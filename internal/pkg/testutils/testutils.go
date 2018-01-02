@@ -67,3 +67,17 @@ func (c TestCommander) CombinedOutput(command string, args ...string) ([]byte, e
 	out, err := cmd.CombinedOutput()
 	return out, err
 }
+
+// EnvVarsForCommander returns an array of additional environment variables
+// for use in TestCommander.
+func EnvVarsForCommander(namespace, expected string, err error) []string {
+	code := "0"
+	if err != nil {
+		code = "1"
+	}
+
+	return []string{
+		fmt.Sprintf("GO_TEST_%s_EXPECTED=%s", namespace, expected),
+		fmt.Sprintf("GO_TEST_%s_EXIT_CODE=%s", namespace, code),
+	}
+}

@@ -40,15 +40,7 @@ func TestLibGet(t *testing.T) {
 	}
 
 	for _, test := range sourcerTestCases {
-		code := "0"
-		if test.err != nil {
-			code = "1"
-		}
-
-		envvars := []string{
-			fmt.Sprintf("GO_TEST_GITSOURCER_EXPECTED=%s", test.expected),
-			fmt.Sprintf("GO_TEST_GITSOURCER_EXIT_CODE=%s", code),
-		}
+		envvars := tu.EnvVarsForCommander("GITSOURCER", test.expected, test.err)
 		commander := &tu.TestCommander{EnvVars: envvars}
 		out, err := sourcer.LibGet(commander, test.libname, tu.Testdir)
 		actual := string(out[:])

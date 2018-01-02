@@ -1,6 +1,7 @@
 package npmsourcer_test
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -61,15 +62,7 @@ func TestLibGet(t *testing.T) {
 	}
 
 	for _, test := range sourcerTestCases {
-		code := "0"
-		if test.err != nil {
-			code = "1"
-		}
-
-		envvars := []string{
-			fmt.Sprintf("GO_TEST_NPMSOURCER_EXPECTED=%s", test.expected),
-			fmt.Sprintf("GO_TEST_NPMSOURCER_EXIT_CODE=%s", code),
-		}
+		envvars := tu.EnvVarsForCommander("NPMSOURCER", test.expected, test.err)
 		commander := &tu.TestCommander{EnvVars: envvars}
 		out, err := sourcer.LibGet(commander, test.libname, tu.Testdir)
 		actual := string(out[:])
@@ -96,10 +89,7 @@ func TestLibGet(t *testing.T) {
 }
 
 func TestLibTest(t *testing.T) {
-	envvars := []string{
-		"GO_TEST_NPMSOURCER_EXPECTED=",
-		"GO_TEST_NPMSOURCER_EXIT_CODE=1",
-	}
+	envvars := tu.EnvVarsForCommander("NPMSOURCER", "", errors.New("LibTest error"))
 	commander := &tu.TestCommander{EnvVars: envvars}
 	_, err := sourcer.LibTest(commander, tu.Testdir)
 
@@ -110,15 +100,7 @@ func TestLibTest(t *testing.T) {
 
 func TestLibDeps(t *testing.T) {
 	for _, test := range depsTestCases {
-		code := "0"
-		if test.err != nil {
-			code = "1"
-		}
-
-		envvars := []string{
-			fmt.Sprintf("GO_TEST_NPMSOURCER_EXPECTED=%s", test.expected),
-			fmt.Sprintf("GO_TEST_NPMSOURCER_EXIT_CODE=%s", code),
-		}
+		envvars := tu.EnvVarsForCommander("NPMSOURCER", test.expected, test.err)
 		commander := &tu.TestCommander{EnvVars: envvars}
 		_, err := sourcer.LibDeps(commander, tu.Testdir, test.isprod)
 
