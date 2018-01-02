@@ -53,12 +53,11 @@ type TestCommander struct {
 }
 
 // CombinedOutput creates mock of Commander.
-// TODO: WIP - finish it!!!
 func (c TestCommander) CombinedOutput(command string, args ...string) ([]byte, error) {
 	cs := []string{"-test.run=TestHelperProcess", "--", command}
 	cs = append(cs, args...)
 	cmd := exec.Command(os.Args[0], cs...)
-	env := []string{"GO_WANT_HELPER_PROCESS=1"}
+	env := []string{"GO_TEST_HELPER_PROCESS=1"}
 
 	for _, v := range c.EnvVars {
 		env = append(env, v)

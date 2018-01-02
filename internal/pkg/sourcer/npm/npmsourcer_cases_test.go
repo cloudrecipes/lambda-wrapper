@@ -3,18 +3,19 @@ package npmsourcer_test
 import "errors"
 
 var sourcerTestCases = []struct {
-	libname string
-	err     error
+	libname  string
+	expected string
+	err      error
 }{
-	{libname: "package-not-found", err: errors.New("exit status 1")},
-	// Please, do not commit it, use this test case only locally
-	// {libname: "@antklim/api-to-cloud", err: nil},
+	{libname: "package-not-found", expected: "package not found", err: errors.New("exit status 1")},
+	{libname: "@antklim/api-to-cloud", expected: "", err: nil},
 }
 
 var depsTestCases = []struct {
-	isprod bool
-	err    error
+	isprod   bool
+	expected string
+	err      error
 }{
-	{isprod: false, err: nil},
-	{isprod: true, err: nil},
+	{isprod: false, expected: "", err: nil},
+	{isprod: true, expected: "", err: nil},
 }

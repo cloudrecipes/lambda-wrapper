@@ -3,6 +3,7 @@ package gitsourcer_test
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"testing"
 
 	s "github.com/cloudrecipes/lambda-wrapper/internal/pkg/sourcer/git"
@@ -11,35 +12,46 @@ import (
 
 var sourcer *s.GitSourcer
 
-func TestMain(m *testing.M) {
-	if err := os.RemoveAll(tu.Testdir); err != nil {
-		fmt.Println("\n>>> Expected to successfully clean up temporary directories before test")
-		os.Exit(1)
+func TestHelperProcess(t *testing.T) {
+	if os.Getenv("GO_TEST_HELPER_PROCESS") != "1" {
+		return
 	}
 
-	if err := os.Mkdir(tu.Testdir, os.ModePerm); err != nil {
-		fmt.Printf("\n>>> Expected err to be nil but got:\n%v", err)
-		os.Exit(1)
+	expected := os.Getenv("GO_TEST_GITSOURCER_EXPECTED")
+	code := 0
+	i, err := strconv.Atoi(os.Getenv("GO_TEST_GITSOURCER_EXIT_CODE"))
+
+	if err == nil {
+		code = i
 	}
 
-	sourcer = &s.GitSourcer{}
-	code := m.Run()
-
-	if err := os.RemoveAll(tu.Testdir); err != nil {
-		fmt.Println("\n>>> Temporary directories could not be cleaned")
+	if code == 0 {
+		fmt.Print(expected)
+	} else {
+		fmt.Fprint(os.Stderr, expected)
 	}
 
-	os.Exit(code)
+	defer os.Exit(code)
 }
 
 func TestLibGet(t *testing.T) {
-	for _, test := range sourcerTestCases {
-		// // remove .git directory to avoid git clone errors
-		// if err := os.RemoveAll(path.Join(tu.Testdir, ".git")); err != nil {
-		// 	t.Fatal("\n>>> Expected to successfully clean up temporary directories")
-		// }
+	if err := tu.CreateTestDirStructure(); err != nil {
+		t.Fatalf("\n>>> Expected err to be nil but got:\n%v", err)
+	}
 
-		_, err := sourcer.LibGet(test.libname, tu.Testdir)
+	for _, test := range sourcerTestCases {
+		code := "0"
+		if test.err != nil {
+			code = "1"
+		}
+
+		envvars := []string{
+			fmt.Sprintf("GO_TEST_GITSOURCER_EXPECTED=%s", test.expected),
+			fmt.Sprintf("GO_TEST_GITSOURCER_EXIT_CODE=%s", code),
+		}
+		commander := &tu.TestCommander{EnvVars: envvars}
+		out, err := sourcer.LibGet(commander, test.libname, tu.Testdir)
+		actual := string(out[:])
 
 		if test.err != nil {
 			if err == nil || test.err.Error() != err.Error() {
@@ -51,18 +63,26 @@ func TestLibGet(t *testing.T) {
 		if test.err == nil && err != nil {
 			t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
 		}
+
+		if test.expected != actual {
+			t.Fatalf("\n>>> Expected:\n%s\n<<< but got:\n%s", test.expected, actual)
+		}
+	}
+
+	if err := os.RemoveAll(tu.Testdir); err != nil {
+		fmt.Println("\n>>> Temporary directories could not be cleaned")
 	}
 }
 
 func TestLibTest(t *testing.T) {
-	_, err := sourcer.LibTest(tu.Testdir)
+	_, err := sourcer.LibTest(&tu.TestCommander{}, tu.Testdir)
 	if err != nil {
 		t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
 	}
 }
 
 func TestLibDeps(t *testing.T) {
-	_, err := sourcer.LibDeps(tu.Testdir, false)
+	_, err := sourcer.LibDeps(&tu.TestCommander{}, tu.Testdir, false)
 	if err != nil {
 		t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
 	}
