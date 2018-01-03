@@ -67,7 +67,7 @@ func NewCliApp(fileoptions *options.Options, action func(o *options.Options) err
 		}
 
 		if !opts.TestRequired {
-			opts.LibSource = fileoptions.LibSource
+			opts.TestRequired = fileoptions.TestRequired
 		}
 
 		return nil
@@ -109,7 +109,7 @@ func flags(opts *options.Options) []clihandler.Flag {
 		clihandler.StringSliceFlag{
 			Name: "service, s",
 			Usage: `a list of cloud services, the wrapper will automatically
-			initiate handlers to these services and pass then to
+			initiate handlers to these services and pass them to
 			the library`,
 		},
 		clihandler.StringFlag{
