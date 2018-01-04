@@ -6,8 +6,8 @@ import cmd "github.com/cloudrecipes/lambda-wrapper/internal/pkg/commander"
 // Sourcer is a generic interface for all types of sources.
 type Sourcer interface {
 	LibGet(c cmd.Commander, libname, workingdir string) ([]byte, error)
-	LibTest(c cmd.Commander, location string) ([]byte, error)
-	LibDeps(c cmd.Commander, location string, isprod bool) ([]byte, error)
+	LibTest(c cmd.Commander, workingdir string) ([]byte, error)
+	LibDeps(c cmd.Commander, workingdir string, isprod bool) ([]byte, error)
 }
 
 // LibGet downloads/gets library using different source types.
