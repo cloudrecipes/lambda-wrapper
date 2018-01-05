@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
 
@@ -40,14 +41,16 @@ func main() {
 	opts, _ := options.FromYamlFile(options.DefaultOptionsFileName)
 
 	action := func(opts *options.Options) error {
-		fmt.Printf("%v\n", opts)
-
 		var err error
 		var lambda string
 		var sourcer s.Sourcer
 		var wrapper w.Wrapper
 		var workingdir string
 		commander := &c.RealCommander{}
+
+		if os.Getenv("DEBUG") != "" {
+			fmt.Printf("%v\n", opts)
+		}
 
 		// Prepate library sourcer
 		if sourcer, err = getSourcer(opts.LibSource); err != nil {
@@ -107,8 +110,13 @@ func main() {
 			return err
 		}
 
-		// TODO: write wrapper code to a hander file
-		fmt.Println(lambda)
+		// TODO: this code does not belong to main.go.
+		// Move it to either wrapper or fs package.
+		filename := path.Join(workingdir, "index.js")
+		if err = ioutil.WriteFile(filename, []byte(lambda), 0644); err != nil {
+			fmt.Printf("%v\n", err)
+			return err
+		}
 
 		// Zip package for deploy
 		if err := fs.ZipDir(workingdir, "tmp.zip"); err != nil {
