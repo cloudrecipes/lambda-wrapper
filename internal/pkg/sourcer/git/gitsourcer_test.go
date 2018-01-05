@@ -1,6 +1,7 @@
 package gitsourcer_test
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -67,15 +68,30 @@ func TestLibGet(t *testing.T) {
 }
 
 func TestLibTest(t *testing.T) {
-	_, err := sourcer.LibTest(&tu.TestCommander{}, tu.Testdir)
-	if err != nil {
-		t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
+	envvars := tu.EnvVarsForCommander("GITSOURCER", "", errors.New("LibTest error"))
+	commander := &tu.TestCommander{EnvVars: envvars}
+	_, err := sourcer.LibTest(commander, tu.Testdir)
+
+	if err == nil {
+		t.Fatalf("\n>>> Expected error not nil")
 	}
 }
 
 func TestLibDeps(t *testing.T) {
-	_, err := sourcer.LibDeps(&tu.TestCommander{}, tu.Testdir, false)
-	if err != nil {
-		t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
+	for _, test := range depsTestCases {
+		envvars := tu.EnvVarsForCommander("GITSOURCER", test.expected, test.err)
+		commander := &tu.TestCommander{EnvVars: envvars}
+		_, err := sourcer.LibDeps(commander, tu.Testdir, test.isprod)
+
+		if test.err != nil {
+			if err == nil || test.err.Error() != err.Error() {
+				t.Fatalf("\n>>> Expected error:\n%v\n<<< but got:\n%v", test.err, err)
+			}
+			continue
+		}
+
+		if test.err == nil && err != nil {
+			t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
+		}
 	}
 }

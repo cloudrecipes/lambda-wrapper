@@ -13,27 +13,6 @@ import (
 
 var sourcer *s.NpmSourcer
 
-// func TestMain(m *testing.M) {
-// 	if err := os.RemoveAll(tu.Testdir); err != nil {
-// 		fmt.Println("\n>>> Expected to successfully clean up temporary directories before test")
-// 		os.Exit(1)
-// 	}
-//
-// 	if err := os.Mkdir(tu.Testdir, os.ModePerm); err != nil {
-// 		fmt.Printf("\n>>> Expected err to be nil but got:\n%v", err)
-// 		os.Exit(1)
-// 	}
-//
-// 	sourcer = &s.NpmSourcer{}
-// 	code := m.Run()
-//
-// 	if err := os.RemoveAll(tu.Testdir); err != nil {
-// 		fmt.Println("\n>>> Temporary directories could not be cleaned")
-// 	}
-//
-// 	os.Exit(code)
-// }
-
 func TestHelperProcess(t *testing.T) {
 	if os.Getenv("GO_TEST_HELPER_PROCESS") != "1" {
 		return
