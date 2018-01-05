@@ -64,14 +64,19 @@ The precedence for option value sources is as follows (highest to lowest):
 
 ## Supported library sources
 * npm
+* git
+
+_Note_: In case when git is a library source and engine is NodeJS then `package.json` __must__ have `main` property. The value of the field will be used as an entry point to your library.
+
+Also `test` field of a `package.json` will be used as a flag to run unit tests prior wrapping library for lambda.
 
 ## Requirements for libraries
 Library which should be wrapped into lambda should expose public `main` method.
-This method will be used by wrapper as an entry point. 
+This method will be used by wrapper as an entry point.
 
 ### API for NodeJS lambda functions on AWS
 __main(data, services)__
-* `data` Object - event object passed by wrapper to lambda 
+* `data` Object - event object passed by wrapper to lambda
 * `services` Object - object contains required service handlers such as `s3`, `sqs`, etc
 * Returns: Promise - callback of lambda handler will be invoked when promise resolves. If promise rejected `err` object will be passed to the callback.
 

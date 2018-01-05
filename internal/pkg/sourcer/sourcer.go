@@ -24,3 +24,5 @@ func LibTest(s Sourcer, workingdir string) ([]byte, error) {
 func LibDeps(s Sourcer, workingdir string, isprod bool) ([]byte, error) {
 	return s.LibDeps(&cmd.RealCommander{}, workingdir, isprod)
 }
+
+// TODO: Check if host OS has installed git and npm
