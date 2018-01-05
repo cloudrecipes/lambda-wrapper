@@ -13,14 +13,14 @@ import (
 
 const workingdir string = ".lwtmp"
 
-var libdir string = path.Join(workingdir, "lib")
-var builddir string = path.Join(workingdir, "build")
+var libdir = path.Join(workingdir, "lib")
+var builddir = path.Join(workingdir, "build")
 
 type zipWriter interface {
 	CreateHeader(*zip.FileHeader) (io.Writer, error)
 }
 
-// ReadFile reterns fila content or error.
+// ReadFile reterns file content or error.
 func ReadFile(filename string) (string, error) {
 	payload, err := ioutil.ReadFile(filename)
 	if err != nil {
