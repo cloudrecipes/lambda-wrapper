@@ -107,7 +107,8 @@ func main() {
 			return err
 		}
 
-		// TODO: write wrapper code to a handler file
+		// TODO: write wrapper code to a hander file
+		fmt.Println(lambda)
 
 		// Zip package for deploy
 		if err := fs.ZipDir(workingdir, "tmp.zip"); err != nil {
