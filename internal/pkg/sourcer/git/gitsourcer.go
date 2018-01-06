@@ -8,8 +8,15 @@ type GitSourcer struct{}
 
 // LibGet gets library source from Git.
 func (s *GitSourcer) LibGet(c cmd.Commander, libname, workingdir string) ([]byte, error) {
-	command := "git"
-	args := []string{workingdir, "clone", libname, "."}
+	var command = "git"
+	var args = []string{workingdir, "clone", libname, "."}
+	if _, err := c.CombinedOutput(command, args...); err != nil {
+		return nil, err
+	}
+
+	// Remove .git directory
+	command = "rm"
+	args = []string{workingdir, "-rf", ".git"}
 	return c.CombinedOutput(command, args...)
 }
 
@@ -27,7 +34,11 @@ func (s *GitSourcer) LibDeps(c cmd.Commander, workingdir string, isprod bool) ([
 	// TODO: update command in relation to the language/engine
 	// npm is applicable to NodeJS only
 	command := "npm"
-	args := []string{workingdir, "test"}
+	args := []string{workingdir, "install"}
+	if isprod {
+		args = append(args, "--prod")
+	}
+
 	return c.CombinedOutput(command, args...)
 }
 
