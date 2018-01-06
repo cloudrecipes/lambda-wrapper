@@ -1,22 +1,31 @@
 // Package gitsourcer implements library download operations from git based sources.
 package gitsourcer
 
-import cmd "github.com/cloudrecipes/lambda-wrapper/internal/pkg/commander"
+import (
+	"path"
+
+	cmd "github.com/cloudrecipes/lambda-wrapper/internal/pkg/commander"
+)
 
 // GitSourcer structure.
 type GitSourcer struct{}
 
+// GitSourceDir is a subdirectory in working directory where to clone library.
+// It's requered to avoid overwriting of the librarie's entry point 'index.js'
+// with lambda handler 'index.js'.
+const GitSourceDir = "_git"
+
 // LibGet gets library source from Git.
 func (s *GitSourcer) LibGet(c cmd.Commander, libname, workingdir string) ([]byte, error) {
 	var command = "git"
-	var args = []string{workingdir, "clone", libname, "."}
+	var args = []string{workingdir, "clone", libname, GitSourceDir}
 	if _, err := c.CombinedOutput(command, args...); err != nil {
 		return nil, err
 	}
 
 	// Remove .git directory
 	command = "rm"
-	args = []string{workingdir, "-rf", ".git"}
+	args = []string{path.Join(workingdir, GitSourceDir), "-rf", ".git"}
 	return c.CombinedOutput(command, args...)
 }
 
@@ -25,7 +34,7 @@ func (s *GitSourcer) LibTest(c cmd.Commander, workingdir string) ([]byte, error)
 	// TODO: update command in relation to the language/engine
 	// npm is applicable to NodeJS only
 	command := "npm"
-	args := []string{workingdir, "test"}
+	args := []string{path.Join(workingdir, GitSourceDir), "test"}
 	return c.CombinedOutput(command, args...)
 }
 
@@ -34,7 +43,7 @@ func (s *GitSourcer) LibDeps(c cmd.Commander, workingdir string, isprod bool) ([
 	// TODO: update command in relation to the language/engine
 	// npm is applicable to NodeJS only
 	command := "npm"
-	args := []string{workingdir, "install"}
+	args := []string{path.Join(workingdir, GitSourceDir), "install"}
 	if isprod {
 		args = append(args, "--prod")
 	}
@@ -43,6 +52,4 @@ func (s *GitSourcer) LibDeps(c cmd.Commander, workingdir string, isprod bool) ([
 }
 
 // INFO: Only for NodeJS based lambdas
-// TODO: when cloning code it can contain 'index.js' on top level. This is an
-// entry point to library, not lambda. And MUST not be overwritten by lambda wrapper.
 // TODO: wrapper should parse package.json to find an entry point and test

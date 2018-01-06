@@ -28,6 +28,7 @@ func (w *AwsWrapper) Wrap(template string, opts *options.Options) (string, error
 
 // injectLibraryIntoTemplate injects libraryname into template.
 func injectLibraryIntoTemplate(template, libraryname string) string {
+	// TODO: if opts.LibSource is git then lib should be replaced with '_git'
 	return s.Replace(template, "{{lib}}", libraryname, -1)
 }
 
