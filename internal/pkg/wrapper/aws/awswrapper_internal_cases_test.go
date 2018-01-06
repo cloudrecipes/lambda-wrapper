@@ -1,14 +1,22 @@
 package awswrapper
 
 var injectLibraryIntoTemplateTestCases = []struct {
-	template    string // template payload
-	libraryname string // library name to inject into template
-	expected    string // expected result
+	template  string // template payload
+	libname   string // library name to inject into template
+	libsource string // library source git, npm
+	expected  string // expected result
 }{
 	{
-		template:    "// library dependency\nconst handler = require('{{lib}}')",
-		libraryname: "@foo/bar",
-		expected:    "// library dependency\nconst handler = require('@foo/bar')",
+		template:  "// library dependency\nconst handler = require('{{lib}}')",
+		libname:   "@foo/bar",
+		libsource: "npm",
+		expected:  "// library dependency\nconst handler = require('@foo/bar')",
+	},
+	{
+		template:  "// library dependency\nconst handler = require('{{lib}}')",
+		libname:   "https://github.com/cloudrecipes/aws-lambda-greeter.git",
+		libsource: "git",
+		expected:  "// library dependency\nconst handler = require('./_git')",
 	},
 }
 

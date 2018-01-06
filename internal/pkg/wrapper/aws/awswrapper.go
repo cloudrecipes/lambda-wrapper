@@ -21,15 +21,19 @@ type AwsWrapper struct{}
 // Wrap methods creates AWS lambda wrapper.
 func (w *AwsWrapper) Wrap(template string, opts *options.Options) (string, error) {
 	resultstr := template
-	resultstr = injectLibraryIntoTemplate(resultstr, opts.LibName)
+	resultstr = injectLibraryIntoTemplate(resultstr, opts.LibName, opts.LibSource)
 	resultstr = injectServicesIntoTemplate(resultstr, opts.Services)
 	return resultstr, nil
 }
 
-// injectLibraryIntoTemplate injects libraryname into template.
-func injectLibraryIntoTemplate(template, libraryname string) string {
-	// TODO: if opts.LibSource is git then lib should be replaced with '_git'
-	return s.Replace(template, "{{lib}}", libraryname, -1)
+// injectLibraryIntoTemplate injects library into template.
+func injectLibraryIntoTemplate(template, libname, libsource string) string {
+	switch libsource {
+	case "git":
+		return s.Replace(template, "{{lib}}", "./_git", -1)
+	default:
+		return s.Replace(template, "{{lib}}", libname, -1)
+	}
 }
 
 // injectServicesIntoTemplate injects services into template.
