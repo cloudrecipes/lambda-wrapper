@@ -1,3 +1,4 @@
+// Package commander contains interface and structure to represent OS commander.
 package commander
 
 import "os/exec"
