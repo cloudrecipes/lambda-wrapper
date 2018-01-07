@@ -56,7 +56,7 @@ func (o *Options) Validate() error {
 	return nil
 }
 
-// FromYamlFile reads options from the YAML file
+// FromYamlFile reads options from the YAML file.
 func FromYamlFile(filename string) (*Options, error) {
 	opts := &Options{}
 	file, err := ioutil.ReadFile(filename)
