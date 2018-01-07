@@ -31,3 +31,10 @@ func (s *NpmSourcer) LibDeps(c cmd.Commander, workingdir string, isprod bool) ([
 
 	return c.CombinedOutput(command, args...)
 }
+
+// VerifySourcerCommands checks if npm command is available on the host OS.
+func (s *NpmSourcer) VerifySourcerCommands(c cmd.Commander) error {
+	args := []string{"", "--version"}
+	_, err := c.CombinedOutput(command, args...)
+	return err
+}

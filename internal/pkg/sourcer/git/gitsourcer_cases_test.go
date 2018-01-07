@@ -19,3 +19,12 @@ var depsTestCases = []struct {
 	{isprod: false, expected: "", err: nil},
 	{isprod: true, expected: "", err: nil},
 }
+
+var verifyCommandsTestCases = []struct {
+	isprod   bool
+	expected string
+	err      error
+}{
+	{expected: "1.0.0", err: nil},
+	{expected: "command not found", err: errors.New("exit status 1")},
+}

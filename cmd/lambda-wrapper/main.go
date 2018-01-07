@@ -59,6 +59,12 @@ func main() {
 			return err
 		}
 
+		fmt.Println("[1.1] verifying all required tools are installed on a host OS...")
+		if err = sourcer.VerifySourcerCommands(commander); err != nil {
+			fmt.Printf("[1.1] sourcer commands verification failed: %v\n", err)
+			return err
+		}
+
 		// Create `.lwtmp`, `.lwtmp/lib`, `.lwtmp/build` directories in Output directory
 		fmt.Println("[2] making dirs...")
 		if err = fs.MakeDirs(opts.Output); err != nil {

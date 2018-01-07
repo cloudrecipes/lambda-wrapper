@@ -51,5 +51,19 @@ func (s *GitSourcer) LibDeps(c cmd.Commander, workingdir string, isprod bool) ([
 	return c.CombinedOutput(command, args...)
 }
 
+// VerifySourcerCommands checks if git, npm commands are available on the host OS.
+func (s *GitSourcer) VerifySourcerCommands(c cmd.Commander) error {
+	args := []string{"", "--version"}
+	commands := []string{"git", "npm"}
+
+	for _, command := range commands {
+		if _, err := c.CombinedOutput(command, args...); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 // INFO: Only for NodeJS based lambdas
 // TODO: wrapper should parse package.json to find an entry point and test
