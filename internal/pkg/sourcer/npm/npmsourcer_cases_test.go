@@ -26,5 +26,5 @@ var verifyCommandsTestCases = []struct {
 	err      error
 }{
 	{expected: "1.0.0", err: nil},
-	{expected: "command not forund", err: errors.New("exit status 1")},
+	{expected: "command not found", err: errors.New("exit status 1")},
 }
