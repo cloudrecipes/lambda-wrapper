@@ -1,22 +1,21 @@
 package awswrapper
 
+import "github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
+
 var injectLibraryIntoTemplateTestCases = []struct {
-	template  string // template payload
-	libname   string // library name to inject into template
-	libsource string // library source git, npm
-	expected  string // expected result
+	template string // template payload
+	opts     *options.Options
+	expected string // expected result
 }{
 	{
-		template:  "// library dependency\nconst handler = require('{{lib}}')",
-		libname:   "@foo/bar",
-		libsource: "npm",
-		expected:  "// library dependency\nconst handler = require('@foo/bar')",
+		template: "// library dependency\nconst handler = require('{{lib}}')",
+		opts:     &options.Options{LibName: "@foo/bar", LibSource: "npm"},
+		expected: "// library dependency\nconst handler = require('@foo/bar')",
 	},
 	{
-		template:  "// library dependency\nconst handler = require('{{lib}}')",
-		libname:   "https://github.com/cloudrecipes/aws-lambda-greeter.git",
-		libsource: "git",
-		expected:  "// library dependency\nconst handler = require('./_git')",
+		template: "// library dependency\nconst handler = require('{{lib}}')",
+		opts:     &options.Options{LibName: "https://github.com/cloudrecipes/aws-lambda-greeter.git", LibSource: "git"},
+		expected: "// library dependency\nconst handler = require('./_git')",
 	},
 }
 
