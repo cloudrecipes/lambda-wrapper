@@ -43,7 +43,6 @@ func TestInjectGitLibraryIntoTemplate(t *testing.T) {
 		if test.expected != actual {
 			t.Fatalf("\n>>> Expected:\n%s\n<<< but got:\n%s", test.expected, actual)
 		}
-
 	}
 }
 

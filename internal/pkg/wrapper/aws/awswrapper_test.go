@@ -7,10 +7,17 @@ func TestWrapper(t *testing.T) {
 	wrapper := &w.AwsWrapper{}
 
 	for _, test := range wrapperTestCases {
-		actual, err := wrapper.Wrap(test.template, test.options)
+		actual, err := wrapper.Wrap(test.template, test.opts)
 
-		if err != nil {
-			t.Fatalf("\n>>> Expected: err to be nil\n<<< but got:\n%v", err)
+		if test.err != nil {
+			if err == nil || test.err.Error() != err.Error() {
+				t.Fatalf("\n>>> Expected error:\n%v\n<<< but got:\n%v", test.err, err)
+			}
+			continue
+		}
+
+		if test.err == nil && err != nil {
+			t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
 		}
 
 		if test.expected != actual {
