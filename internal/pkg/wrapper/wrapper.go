@@ -17,7 +17,6 @@ var templatedir = path.Join(os.Getenv("GOPATH"), "src", "github.com",
 // Wrapper generic interface for all types of wrappers.
 type Wrapper interface {
 	Wrap(template string, opts *options.Options) (string, error)
-	// Save(payload, filename string, fs f.I, perm os.FileMode) error
 }
 
 // Wrap reads template and wraps library into it.
@@ -30,6 +29,11 @@ func Wrap(w Wrapper, opts *options.Options, templatedir string) (string, error) 
 	}
 
 	return w.Wrap(template, opts)
+}
+
+// Save writes lambda handler in a file 'filename'.
+func Save(filename, payload string, fs f.I) error {
+	return fs.WriteFile(filename, []byte(payload), 0644)
 }
 
 // DefaultTemplateDir returns default template directory.

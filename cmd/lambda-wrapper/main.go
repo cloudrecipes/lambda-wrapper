@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 
@@ -130,7 +129,7 @@ func main() {
 		// Move it to either wrapper or fs package.
 		fmt.Println("[10] writing lambda handler...")
 		filename := path.Join(workingdir, "index.js")
-		if err = ioutil.WriteFile(filename, []byte(lambda), 0644); err != nil {
+		if err = w.Save(filename, lambda, fs); err != nil {
 			fmt.Printf("[10] write wrapper: %v\n", err)
 			return err
 		}

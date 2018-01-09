@@ -5,6 +5,7 @@ import (
 	"path"
 	"testing"
 
+	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/wrapper"
 )
 
@@ -37,5 +38,15 @@ func TestDefaultTemplateDir(t *testing.T) {
 
 	if expected != actual {
 		t.Fatalf("\n>>> Expected:\n%s\n<<< but got:\n%s", expected, actual)
+	}
+}
+
+func TestSave(t *testing.T) {
+	expected := "test error"
+	os.Setenv(tu.GoTestFsWriteFileError, expected)
+	err := wrapper.Save("file.txt", "payload", &tu.TestFs{})
+
+	if err == nil || err.Error() != expected {
+		t.Fatalf("\n>>> Expected error:\n%s\n<<< but got:\n%v", expected, err)
 	}
 }

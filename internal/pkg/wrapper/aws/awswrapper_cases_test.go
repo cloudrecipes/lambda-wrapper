@@ -39,6 +39,6 @@ services.s3 = new aws.S3({apiVersion: 'latest'})`,
 			LibSource: "git",
 		},
 		expected: "",
-		err:      errors.New("open _git/package.json: no such file or directory"),
+		err:      errors.New("open .lwtmp/lib/_git/package.json: no such file or directory"),
 	},
 }
