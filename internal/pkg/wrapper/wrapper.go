@@ -17,6 +17,7 @@ var templatedir = path.Join(os.Getenv("GOPATH"), "src", "github.com",
 // Wrapper generic interface for all types of wrappers.
 type Wrapper interface {
 	Wrap(template string, opts *options.Options) (string, error)
+	// Save(payload, filename string, fs f.I, perm os.FileMode) error
 }
 
 // Wrap reads template and wraps library into it.
