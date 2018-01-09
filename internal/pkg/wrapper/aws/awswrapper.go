@@ -4,9 +4,13 @@ package awswrapper
 
 import (
 	"fmt"
+	"path"
 	s "strings"
 
+	f "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
+	gs "github.com/cloudrecipes/lambda-wrapper/internal/pkg/sourcer/git"
+	p "github.com/cloudrecipes/packagejson/pkg/packagejson"
 )
 
 // awsservices is the map of supported services and handler initiators.
@@ -20,20 +24,47 @@ type AwsWrapper struct{}
 
 // Wrap methods creates AWS lambda wrapper.
 func (w *AwsWrapper) Wrap(template string, opts *options.Options) (string, error) {
+	var err error
 	resultstr := template
-	resultstr = injectLibraryIntoTemplate(resultstr, opts.LibName, opts.LibSource)
+
+	if resultstr, err = injectLibraryIntoTemplate(resultstr, opts); err != nil {
+		return "", err
+	}
+
 	resultstr = injectServicesIntoTemplate(resultstr, opts.Services)
 	return resultstr, nil
 }
 
 // injectLibraryIntoTemplate injects library into template.
-func injectLibraryIntoTemplate(template, libname, libsource string) string {
-	switch libsource {
+func injectLibraryIntoTemplate(template string, opts *options.Options) (string, error) {
+	switch opts.LibSource {
 	case "git":
-		return s.Replace(template, "{{lib}}", "./_git", -1)
+		return injectGitLibraryIntoTemplate(template, opts, &f.Fs{})
 	default:
-		return s.Replace(template, "{{lib}}", libname, -1)
+		return s.Replace(template, "{{lib}}", opts.LibName, -1), nil
 	}
+}
+
+// injectGitLibraryIntoTemplate injects git based library into template.
+func injectGitLibraryIntoTemplate(template string, opts *options.Options, fs f.I) (string, error) {
+	filepath := path.Join(opts.Output, gs.GitSourceDir, "package.json")
+	payload, err := fs.ReadFileToBytes(filepath)
+	if err != nil {
+		return "", err
+	}
+
+	packagejson, err := p.Parse(payload)
+	if err != nil {
+		return "", err
+	}
+
+	if err := packagejson.Validate(); err != nil {
+		return "", err
+	}
+
+	entrypoint := packagejson.Main
+
+	return s.Replace(template, "{{lib}}", fmt.Sprintf("./_git/%s", entrypoint), -1), nil
 }
 
 // injectServicesIntoTemplate injects services into template.

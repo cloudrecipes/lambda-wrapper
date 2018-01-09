@@ -2,10 +2,9 @@ package wrapper_test
 
 import (
 	"errors"
-	"os"
-	"path"
 
 	o "github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
+	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
 )
 
 type testWrapper struct{}
@@ -27,10 +26,9 @@ var wrapTestCases = []struct {
 		expected:    "",
 	},
 	{
-		options: &o.Options{Cloud: "AWS", Engine: "Node"},
-		templatedir: path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
-			"lambda-wrapper", "test", "fixtures"),
-		err:      nil,
-		expected: "template wrapped",
+		options:     &o.Options{Cloud: "AWS", Engine: "Node"},
+		templatedir: tu.Fixturesdir,
+		err:         nil,
+		expected:    "template wrapped",
 	},
 }

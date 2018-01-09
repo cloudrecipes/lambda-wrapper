@@ -33,6 +33,7 @@ func (s *GitSourcer) LibGet(c cmd.Commander, libname, workingdir string) ([]byte
 func (s *GitSourcer) LibTest(c cmd.Commander, workingdir string) ([]byte, error) {
 	// TODO: update command in relation to the language/engine
 	// npm is applicable to NodeJS only
+	// TODO: add check if 'test' is available in package.json
 	command := "npm"
 	args := []string{path.Join(workingdir, GitSourceDir), "test"}
 	return c.CombinedOutput(command, args...)

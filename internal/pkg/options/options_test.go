@@ -1,12 +1,12 @@
 package options_test
 
 import (
-	"os"
 	"path"
 	"reflect"
 	"testing"
 
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
+	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
 )
 
 func TestValidate(t *testing.T) {
@@ -28,8 +28,7 @@ func TestValidate(t *testing.T) {
 }
 
 func TestFromYamlFile(t *testing.T) {
-	filename := path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
-		"lambda-wrapper", "test", "fixtures", ".lwrc.yaml")
+	filename := path.Join(tu.Fixturesdir, ".lwrc.yaml")
 	opts, err := options.FromYamlFile(filename)
 
 	if err != nil {

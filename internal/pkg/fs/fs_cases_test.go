@@ -2,7 +2,6 @@ package fs_test
 
 import (
 	"errors"
-	"os"
 	"path"
 
 	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
@@ -19,8 +18,7 @@ var readFileTestCases = []struct {
 		expected: "",
 	},
 	{
-		filename: path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
-			"lambda-wrapper", "test", "fixtures", "fs_readfile.txt"),
+		filename: path.Join(tu.Fixturesdir, "fs_readfile.txt"),
 		err:      nil,
 		expected: "Hello Test!",
 	},

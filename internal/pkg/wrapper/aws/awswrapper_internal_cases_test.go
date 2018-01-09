@@ -1,22 +1,30 @@
 package awswrapper
 
+import (
+	"errors"
+
+	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
+	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
+)
+
 var injectLibraryIntoTemplateTestCases = []struct {
-	template  string // template payload
-	libname   string // library name to inject into template
-	libsource string // library source git, npm
-	expected  string // expected result
+	template string // template payload
+	opts     *options.Options
+	expected string // expected result
 }{
 	{
-		template:  "// library dependency\nconst handler = require('{{lib}}')",
-		libname:   "@foo/bar",
-		libsource: "npm",
-		expected:  "// library dependency\nconst handler = require('@foo/bar')",
+		template: "// library dependency\nconst handler = require('{{lib}}')",
+		opts:     &options.Options{LibName: "@foo/bar", LibSource: "npm"},
+		expected: "// library dependency\nconst handler = require('@foo/bar')",
 	},
 	{
-		template:  "// library dependency\nconst handler = require('{{lib}}')",
-		libname:   "https://github.com/cloudrecipes/aws-lambda-greeter.git",
-		libsource: "git",
-		expected:  "// library dependency\nconst handler = require('./_git')",
+		template: "// library dependency\nconst handler = require('{{lib}}')",
+		opts: &options.Options{
+			LibName:   "https://github.com/cloudrecipes/aws-lambda-greeter.git",
+			LibSource: "git",
+			Output:    tu.Fixturesdir,
+		},
+		expected: "// library dependency\nconst handler = require('./_git/index.js')",
 	},
 }
 
@@ -51,4 +59,46 @@ var initiateServiceHandlersTestCases = []struct {
 }{
 	{services: []string{}, expected: ""},
 	{services: []string{"s3", "sqs", "sns"}, expected: "services.s3 = new aws.S3({apiVersion: 'latest'})\n\nservices.sns = new aws.SNS()"},
+}
+
+var injectGitLibraryIntoTemplateTestCases = []struct {
+	template    string
+	opts        *options.Options
+	payload     string
+	readFileErr string
+	err         error  // an error flag
+	expected    string // expected result
+}{
+	{
+		template:    "// library dependency\nconst handler = require('{{lib}}')",
+		opts:        &options.Options{Output: "tmp"},
+		payload:     "",
+		readFileErr: "open package.json: no such file or directory",
+		err:         errors.New("open package.json: no such file or directory"),
+		expected:    "",
+	},
+	{
+		template:    "// library dependency\nconst handler = require('{{lib}}')",
+		opts:        &options.Options{Output: "tmp"},
+		payload:     "{",
+		readFileErr: "",
+		err:         errors.New("unexpected end of JSON input"),
+		expected:    "",
+	},
+	{
+		template:    "// library dependency\nconst handler = require('{{lib}}')",
+		opts:        &options.Options{Output: "tmp"},
+		payload:     "{}",
+		readFileErr: "",
+		err:         errors.New("'Name' field is required in package.json"),
+		expected:    "",
+	},
+	{
+		template:    "// library dependency\nconst handler = require('{{lib}}')",
+		opts:        &options.Options{Output: "tmp"},
+		payload:     "{\"name\": \"test\", \"version\": \"0.0.1\", \"main\": \"go.js\"}",
+		readFileErr: "",
+		err:         nil,
+		expected:    "// library dependency\nconst handler = require('./_git/go.js')",
+	},
 }

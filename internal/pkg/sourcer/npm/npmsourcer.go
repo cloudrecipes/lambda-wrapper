@@ -18,6 +18,7 @@ func (s *NpmSourcer) LibGet(c cmd.Commander, libname, workingdir string) ([]byte
 
 // LibTest runs tests defined in library.
 func (s *NpmSourcer) LibTest(c cmd.Commander, workingdir string) ([]byte, error) {
+	// TODO: add check if 'test' is available in package.json
 	args := []string{workingdir, "test"}
 	return c.CombinedOutput(command, args...)
 }
