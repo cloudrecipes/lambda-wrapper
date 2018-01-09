@@ -46,7 +46,7 @@ func injectLibraryIntoTemplate(template string, opts *options.Options) (string, 
 }
 
 // injectGitLibraryIntoTemplate injects git based library into template.
-func injectGitLibraryIntoTemplate(template string, opts *options.Options, fs *f.Fs) (string, error) {
+func injectGitLibraryIntoTemplate(template string, opts *options.Options, fs f.I) (string, error) {
 	filepath := path.Join(opts.Output, gs.GitSourceDir, "package.json")
 	payload, err := fs.ReadFileToBytes(filepath)
 	if err != nil {

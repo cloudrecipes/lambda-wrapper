@@ -1,6 +1,8 @@
 package awswrapper
 
 import (
+	"errors"
+
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
 )
 
@@ -55,19 +57,43 @@ var initiateServiceHandlersTestCases = []struct {
 }
 
 var injectGitLibraryIntoTemplateTestCases = []struct {
-	// filename string // filename to read payload
-	// err      error  // an error flag
-	// expected string // expected file payload
+	template    string
+	opts        *options.Options
+	payload     string
+	readFileErr string
+	err         error  // an error flag
+	expected    string // expected result
 }{
-// {
-// 	filename: "no_such_file.txt",
-// 	err:      errors.New("open no_such_file.txt: no such file or directory"),
-// 	expected: "",
-// },
-// {
-// 	filename: path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
-// 		"lambda-wrapper", "test", "fixtures", "fs_readfile.txt"),
-// 	err:      nil,
-// 	expected: "Hello Test!",
-// },
+	{
+		template:    "// library dependency\nconst handler = require('{{lib}}')",
+		opts:        &options.Options{Output: "tmp"},
+		payload:     "",
+		readFileErr: "open package.json: no such file or directory",
+		err:         errors.New("open package.json: no such file or directory"),
+		expected:    "",
+	},
+	{
+		template:    "// library dependency\nconst handler = require('{{lib}}')",
+		opts:        &options.Options{Output: "tmp"},
+		payload:     "{",
+		readFileErr: "",
+		err:         errors.New("unexpected end of JSON input"),
+		expected:    "",
+	},
+	{
+		template:    "// library dependency\nconst handler = require('{{lib}}')",
+		opts:        &options.Options{Output: "tmp"},
+		payload:     "{}",
+		readFileErr: "",
+		err:         errors.New("'Name' field is required in package.json"),
+		expected:    "",
+	},
+	{
+		template:    "// library dependency\nconst handler = require('{{lib}}')",
+		opts:        &options.Options{Output: "tmp"},
+		payload:     "{\"name\": \"test\", \"version\": \"0.0.1\", \"main\": \"go.js\"}",
+		readFileErr: "",
+		err:         nil,
+		expected:    "// library dependency\nconst handler = require('./_git/go.js')",
+	},
 }
