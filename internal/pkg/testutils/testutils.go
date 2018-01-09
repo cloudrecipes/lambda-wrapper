@@ -134,6 +134,22 @@ func (fs *TestFs) ReadFileToBytes(filename string) ([]byte, error) {
 	return payload, err
 }
 
+// GoTestFsWriteFileError env variable name.
+const GoTestFsWriteFileError = "GO_TEST_FS_WRITE_FILE_ERROR"
+
+// WriteFile is a test implementaiton of write file.
+func (fs *TestFs) WriteFile(filename string, payload []byte, perm os.FileMode) error {
+	var err error
+
+	errmessage := os.Getenv(GoTestFsWriteFileError)
+
+	if len(errmessage) > 0 {
+		err = errors.New(errmessage)
+	}
+
+	return err
+}
+
 // GoTestFsRmDirError env variable name.
 const GoTestFsRmDirError = "GO_TEST_FS_RM_DIR_ERROR"
 

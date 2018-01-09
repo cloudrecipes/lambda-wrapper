@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"path"
-	s "strings"
 	"testing"
 
 	f "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
@@ -167,14 +166,41 @@ func TestZipDirError(t *testing.T) {
 	for _, test := range zipDirErrorTestCases {
 		actual := fs.ZipDir(test.source, test.target)
 
-		if s.Compare(test.expected.Error(), actual.Error()) != 0 {
+		if test.expected.Error() != actual.Error() {
 			t.Fatalf("\n>>> Expected:\n%v\n<<< but got:\n%v", test.expected, actual)
 		}
 
-		if s.Compare("", test.target) != 0 {
+		if "" != test.target {
 			if err := os.Remove(test.target); err != nil {
 				t.Fatal("\n>>> Expected to successfully clean up archive file")
 			}
 		}
+	}
+}
+
+func TestWriteFile(t *testing.T) {
+	if err := tu.CreateTestDirStructure(); err != nil {
+		t.Fatalf("\n>>> Expected err to be nil but got:\n%v", err)
+	}
+
+	expected := "hello there"
+	payload := []byte(expected)
+	filename := path.Join(tu.Testdir, "blah.txt")
+
+	if err := fs.WriteFile(filename, payload, 0644); err != nil {
+		t.Fatalf("\n>>> Expected err to be nil but got:\n%v", err)
+	}
+
+	actual, err := fs.ReadFile(filename)
+	if err != nil {
+		t.Fatalf("\n>>> Expected err to be nil but got:\n%v", err)
+	}
+
+	if expected != actual {
+		t.Fatalf("\n>>> Expected:\n%v\n<<< but got:\n%v", expected, actual)
+	}
+
+	if err := os.RemoveAll(tu.Testdir); err != nil {
+		t.Fatal("\n>>> Expected to successfully clean up temporary directories")
 	}
 }

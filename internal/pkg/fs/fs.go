@@ -20,6 +20,7 @@ var builddir = path.Join(workingdir, "build")
 type I interface {
 	ReadFile(filename string) (string, error)
 	ReadFileToBytes(filename string) ([]byte, error)
+	WriteFile(filename string, payload []byte, perm os.FileMode) error
 	RmDir(basedir string) error
 	ZipDir(source, target string) error
 }
@@ -77,6 +78,11 @@ func (fs *Fs) ReadFile(filename string) (string, error) {
 // ReadFileToBytes returns file content as bytes.
 func (fs *Fs) ReadFileToBytes(filename string) ([]byte, error) {
 	return ioutil.ReadFile(filename)
+}
+
+// WriteFile writes file.
+func (fs *Fs) WriteFile(filename string, payload []byte, perm os.FileMode) error {
+	return ioutil.WriteFile(filename, payload, perm)
 }
 
 // RmDir removes working directories.
