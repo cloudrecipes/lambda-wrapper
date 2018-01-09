@@ -8,6 +8,10 @@ import (
 	"path"
 )
 
+// Fixturesdir is a test fixtures dir.
+var Fixturesdir = path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
+	"lambda-wrapper", "test", "fixtures")
+
 // Basedir is a base temporary directory.
 var Basedir = path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
 	"lambda-wrapper", "test", "tmp")

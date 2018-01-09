@@ -7,7 +7,7 @@ import (
 	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
 )
 
-func TesInjectLibraryIntoTemplate(t *testing.T) {
+func TestInjectLibraryIntoTemplate(t *testing.T) {
 	for _, test := range injectLibraryIntoTemplateTestCases {
 		actual, err := injectLibraryIntoTemplate(test.template, test.opts)
 

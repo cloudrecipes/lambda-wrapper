@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
+	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
 )
 
 var injectLibraryIntoTemplateTestCases = []struct {
@@ -18,8 +19,12 @@ var injectLibraryIntoTemplateTestCases = []struct {
 	},
 	{
 		template: "// library dependency\nconst handler = require('{{lib}}')",
-		opts:     &options.Options{LibName: "https://github.com/cloudrecipes/aws-lambda-greeter.git", LibSource: "git"},
-		expected: "// library dependency\nconst handler = require('./_git')",
+		opts: &options.Options{
+			LibName:   "https://github.com/cloudrecipes/aws-lambda-greeter.git",
+			LibSource: "git",
+			Output:    tu.Fixturesdir,
+		},
+		expected: "// library dependency\nconst handler = require('./_git/index.js')",
 	},
 }
 
