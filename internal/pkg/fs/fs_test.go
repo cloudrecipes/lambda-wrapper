@@ -1,6 +1,7 @@
 package fs_test
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"path"
@@ -53,6 +54,27 @@ func TestReadFile(t *testing.T) {
 
 		if test.expected != actual {
 			t.Fatalf("\n>>> Expected:\n%s\n<<< but got:\n%s", test.expected, actual)
+		}
+	}
+}
+
+func TestReadFileAsBytes(t *testing.T) {
+	for _, test := range readFileTestCases {
+		actual, err := fs.ReadFileToBytes(test.filename)
+
+		if test.err != nil {
+			if err == nil || test.err.Error() != err.Error() {
+				t.Fatalf("\n>>> Expected error:\n%v\n<<< but got:\n%v", test.err, err)
+			}
+			continue
+		}
+
+		if test.err == nil && err != nil {
+			t.Fatalf("\n>>> Expected error:\nnil\n<<< but got:\n%v", err)
+		}
+
+		if !bytes.Equal([]byte(test.expected), actual) {
+			t.Fatalf("\n>>> Bytes slices are not equal")
 		}
 	}
 }

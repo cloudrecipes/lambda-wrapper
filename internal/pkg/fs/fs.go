@@ -30,6 +30,11 @@ func ReadFile(filename string) (string, error) {
 	return string(payload), err
 }
 
+// ReadFileToBytes returns file content as bytes.
+func ReadFileToBytes(filename string) ([]byte, error) {
+	return ioutil.ReadFile(filename)
+}
+
 // WorkingDir returns working directory name.
 func WorkingDir() string {
 	return workingdir
