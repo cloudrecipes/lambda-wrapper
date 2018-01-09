@@ -2,8 +2,8 @@ package wrapperutils_test
 
 import (
 	"errors"
-	"os"
-	"path"
+
+	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
 )
 
 var templateFileNameTestCases = []struct {
@@ -27,10 +27,9 @@ var readTemplateFileTestCases = []struct {
 		expected:    "",
 	},
 	{
-		templatedir: path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
-			"lambda-wrapper", "test", "fixtures"),
-		filename: "aws-node",
-		err:      nil,
+		templatedir: tu.Fixturesdir,
+		filename:    "aws-node",
+		err:         nil,
 		expected: `// AWS SDK dependency
 {{aws}}
 
