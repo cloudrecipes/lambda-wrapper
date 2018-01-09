@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 
+	f "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
 	utils "github.com/cloudrecipes/lambda-wrapper/internal/pkg/wrapper/utils"
 )
@@ -21,7 +22,7 @@ type Wrapper interface {
 // Wrap reads template and wraps library into it.
 func Wrap(w Wrapper, opts *options.Options, templatedir string) (string, error) {
 	templatefile := utils.TemplateFileName(opts.Cloud, opts.Engine)
-	template, err := utils.ReadTemplateFile(templatedir, templatefile)
+	template, err := utils.ReadTemplateFile(templatedir, templatefile, &f.Fs{})
 
 	if err != nil {
 		return "", err

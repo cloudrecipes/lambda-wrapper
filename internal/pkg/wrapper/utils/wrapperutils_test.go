@@ -2,6 +2,7 @@ package wrapperutils_test
 
 import "testing"
 import "github.com/cloudrecipes/lambda-wrapper/internal/pkg/wrapper/utils"
+import f "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
 
 func TestBuildTemplateFileName(t *testing.T) {
 	for _, test := range templateFileNameTestCases {
@@ -13,8 +14,9 @@ func TestBuildTemplateFileName(t *testing.T) {
 }
 
 func TestReadTemplateFile(t *testing.T) {
+	fs := &f.Fs{}
 	for _, test := range readTemplateFileTestCases {
-		actual, err := wrapperutils.ReadTemplateFile(test.templatedir, test.filename)
+		actual, err := wrapperutils.ReadTemplateFile(test.templatedir, test.filename, fs)
 
 		if test.err != nil {
 			if err == nil || test.err.Error() != err.Error() {
