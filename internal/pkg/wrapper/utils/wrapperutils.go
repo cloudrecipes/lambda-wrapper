@@ -6,7 +6,7 @@ import (
 	"path"
 	s "strings"
 
-	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
+	f "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
 )
 
 // TemplateFileName returns template file name in regards to cloud provider name
@@ -16,7 +16,7 @@ func TemplateFileName(cloud, engine string) string {
 }
 
 // ReadTemplateFile reads teamplate file and returns it's content or error.
-func ReadTemplateFile(templatedir, filename string) (string, error) {
+func ReadTemplateFile(templatedir, filename string, fs *f.Fs) (string, error) {
 	templatefile := path.Join(templatedir, filename)
 	return fs.ReadFile(templatefile)
 }

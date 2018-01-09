@@ -8,7 +8,7 @@ import (
 
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/cli"
 	c "github.com/cloudrecipes/lambda-wrapper/internal/pkg/commander"
-	fs "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
+	f "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
 	s "github.com/cloudrecipes/lambda-wrapper/internal/pkg/sourcer"
 	git "github.com/cloudrecipes/lambda-wrapper/internal/pkg/sourcer/git"
@@ -42,6 +42,7 @@ func main() {
 
 	action := func(opts *options.Options) error {
 		var err error
+		var fs = &f.Fs{}
 		var lambda string
 		var sourcer s.Sourcer
 		var wrapper w.Wrapper
@@ -67,14 +68,14 @@ func main() {
 
 		// Create `.lwtmp`, `.lwtmp/lib`, `.lwtmp/build` directories in Output directory
 		fmt.Println("[2] making dirs...")
-		if err = fs.MakeDirs(opts.Output); err != nil {
+		if err = f.MakeDirs(opts.Output); err != nil {
 			fmt.Printf("[2] make dirs: %v\n", err)
 			return err
 		}
 
 		// Install library into `.lwtmp/lib`
 		fmt.Println("[3] getting library...")
-		workingdir = path.Join(opts.Output, fs.LibDir())
+		workingdir = path.Join(opts.Output, f.LibDir())
 		if _, err = sourcer.LibGet(commander, opts.LibName, workingdir); err != nil {
 			fmt.Printf("[3] library get: %v\n", err)
 			return err
@@ -98,7 +99,7 @@ func main() {
 
 		// Install library into `.lwtmp/build`
 		fmt.Println("[6] getting library for build...")
-		workingdir = path.Join(opts.Output, fs.BuildDir())
+		workingdir = path.Join(opts.Output, f.BuildDir())
 		if _, err = sourcer.LibGet(commander, opts.LibName, workingdir); err != nil {
 			fmt.Printf("[6] build library get: %v\n", err)
 			return err

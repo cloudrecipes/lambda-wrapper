@@ -16,23 +16,19 @@ const workingdir string = ".lwtmp"
 var libdir = path.Join(workingdir, "lib")
 var builddir = path.Join(workingdir, "build")
 
+// I interface provides methods to work with file system
+type I interface {
+	ReadFile(filename string) (string, error)
+	ReadFileToBytes(filename string) ([]byte, error)
+	RmDir(basedir string) error
+	ZipDir(source, target string) error
+}
+
+// Fs is a generic file system operations structure
+type Fs struct{}
+
 type zipWriter interface {
 	CreateHeader(*zip.FileHeader) (io.Writer, error)
-}
-
-// ReadFile reterns file content or error.
-func ReadFile(filename string) (string, error) {
-	payload, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return "", err
-	}
-
-	return string(payload), err
-}
-
-// ReadFileToBytes returns file content as bytes.
-func ReadFileToBytes(filename string) ([]byte, error) {
-	return ioutil.ReadFile(filename)
 }
 
 // WorkingDir returns working directory name.
@@ -50,7 +46,8 @@ func BuildDir() string {
 	return builddir
 }
 
-// MakeDirs creates necessary working directories (if directories exist they will overwritten).
+// MakeDirs creates necessary working directories structure (if directories exist
+// they will overwritten). This method is specific to the wrapper.
 func MakeDirs(basedir string) error {
 	dirs := []string{
 		path.Join(basedir, workingdir),
@@ -67,13 +64,28 @@ func MakeDirs(basedir string) error {
 	return nil
 }
 
-// RmDirs removes working directories.
-func RmDirs(basedir string) error {
+// ReadFile reterns file content or error.
+func (fs *Fs) ReadFile(filename string) (string, error) {
+	payload, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return "", err
+	}
+
+	return string(payload), err
+}
+
+// ReadFileToBytes returns file content as bytes.
+func (fs *Fs) ReadFileToBytes(filename string) ([]byte, error) {
+	return ioutil.ReadFile(filename)
+}
+
+// RmDir removes working directories.
+func (fs *Fs) RmDir(basedir string) error {
 	return os.RemoveAll(path.Join(basedir, workingdir))
 }
 
 // ZipDir archives directory.
-func ZipDir(source, target string) error {
+func (fs *Fs) ZipDir(source, target string) error {
 	var err error
 	zipfile, err := os.Create(target)
 	if err != nil {

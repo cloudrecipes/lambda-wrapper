@@ -8,9 +8,11 @@ import (
 	s "strings"
 	"testing"
 
-	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
+	f "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
 	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
 )
+
+var fs = &f.Fs{}
 
 func createDummyFiles() error {
 	for _, f := range filesToZip {
@@ -83,26 +85,26 @@ func TestDirGetters(t *testing.T) {
 	var expected, actual string
 
 	expected = ".lwtmp"
-	actual = fs.WorkingDir()
+	actual = f.WorkingDir()
 	if expected != actual {
 		t.Fatalf("\n>>> Expected:\n%s\n<<< but got:\n%s", expected, actual)
 	}
 
 	expected = ".lwtmp/lib"
-	actual = fs.LibDir()
+	actual = f.LibDir()
 	if expected != actual {
 		t.Fatalf("\n>>> Expected:\n%s\n<<< but got:\n%s", expected, actual)
 	}
 
 	expected = ".lwtmp/build"
-	actual = fs.BuildDir()
+	actual = f.BuildDir()
 	if expected != actual {
 		t.Fatalf("\n>>> Expected:\n%s\n<<< but got:\n%s", expected, actual)
 	}
 }
 
 func TestMakeDirs(t *testing.T) {
-	if err := fs.MakeDirs(tu.Basedir); err != nil {
+	if err := f.MakeDirs(tu.Basedir); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 
@@ -116,17 +118,17 @@ func TestMakeDirs(t *testing.T) {
 }
 
 func TestMakeDirsErrorCase(t *testing.T) {
-	if err := fs.MakeDirs("blah"); err == nil {
+	if err := f.MakeDirs("blah"); err == nil {
 		t.Fatal("\n>>> Expected err not to be nil")
 	}
 }
 
-func TestRmDirs(t *testing.T) {
+func TestRmDir(t *testing.T) {
 	if err := tu.CreateTestDirStructure(); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil but got:\n%v", err)
 	}
 
-	if err := fs.RmDirs(tu.Basedir); err != nil {
+	if err := fs.RmDir(tu.Basedir); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 
