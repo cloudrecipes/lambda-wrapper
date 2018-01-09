@@ -31,6 +31,11 @@ func Wrap(w Wrapper, opts *options.Options, templatedir string) (string, error) 
 	return w.Wrap(template, opts)
 }
 
+// Save writes lambda handler in a file 'filename'.
+func Save(filename, payload string, fs f.I) error {
+	return fs.WriteFile(filename, []byte(payload), 0644)
+}
+
 // DefaultTemplateDir returns default template directory.
 func DefaultTemplateDir() string {
 	return templatedir
