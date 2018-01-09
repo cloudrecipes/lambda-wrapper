@@ -7,7 +7,7 @@ import (
 	"path"
 	s "strings"
 
-	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
+	f "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
 	gs "github.com/cloudrecipes/lambda-wrapper/internal/pkg/sourcer/git"
 	p "github.com/cloudrecipes/packagejson/pkg/packagejson"
@@ -39,14 +39,14 @@ func (w *AwsWrapper) Wrap(template string, opts *options.Options) (string, error
 func injectLibraryIntoTemplate(template string, opts *options.Options) (string, error) {
 	switch opts.LibSource {
 	case "git":
-		return injectGitLibraryIntoTemplate(template, opts)
+		return injectGitLibraryIntoTemplate(template, opts, &f.Fs{})
 	default:
 		return s.Replace(template, "{{lib}}", opts.LibName, -1), nil
 	}
 }
 
 // injectGitLibraryIntoTemplate injects git based library into template.
-func injectGitLibraryIntoTemplate(template string, opts *options.Options) (string, error) {
+func injectGitLibraryIntoTemplate(template string, opts *options.Options, fs *f.Fs) (string, error) {
 	filepath := path.Join(opts.Output, gs.GitSourceDir, "package.json")
 	payload, err := fs.ReadFileToBytes(filepath)
 	if err != nil {
