@@ -121,12 +121,12 @@ func TestMakeDirsErrorCase(t *testing.T) {
 	}
 }
 
-func TestRmDirs(t *testing.T) {
+func TestRmDir(t *testing.T) {
 	if err := tu.CreateTestDirStructure(); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil but got:\n%v", err)
 	}
 
-	if err := fs.RmDirs(tu.Basedir); err != nil {
+	if err := fs.RmDir(tu.Basedir); err != nil {
 		t.Fatalf("\n>>> Expected err to be nil, but got:\n%v", err)
 	}
 

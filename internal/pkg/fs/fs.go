@@ -16,6 +16,14 @@ const workingdir string = ".lwtmp"
 var libdir = path.Join(workingdir, "lib")
 var builddir = path.Join(workingdir, "build")
 
+// I interface provides methods to work with file system
+type I interface {
+	ReadFile(filename string) (string, error)
+	ReadFileToBytes(filename string) ([]byte, error)
+	RmDir(basedir string) error
+	ZipDir(source, target string) error
+}
+
 type zipWriter interface {
 	CreateHeader(*zip.FileHeader) (io.Writer, error)
 }
@@ -50,7 +58,8 @@ func BuildDir() string {
 	return builddir
 }
 
-// MakeDirs creates necessary working directories (if directories exist they will overwritten).
+// MakeDirs creates necessary working directories structure (if directories exist
+// they will overwritten). This method is specific to the wrapper.
 func MakeDirs(basedir string) error {
 	dirs := []string{
 		path.Join(basedir, workingdir),
@@ -67,8 +76,8 @@ func MakeDirs(basedir string) error {
 	return nil
 }
 
-// RmDirs removes working directories.
-func RmDirs(basedir string) error {
+// RmDir removes working directories.
+func RmDir(basedir string) error {
 	return os.RemoveAll(path.Join(basedir, workingdir))
 }
 
