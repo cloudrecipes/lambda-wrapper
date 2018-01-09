@@ -1,6 +1,8 @@
 package awswrapper
 
-import "github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
+import (
+	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
+)
 
 var injectLibraryIntoTemplateTestCases = []struct {
 	template string // template payload
@@ -50,4 +52,22 @@ var initiateServiceHandlersTestCases = []struct {
 }{
 	{services: []string{}, expected: ""},
 	{services: []string{"s3", "sqs", "sns"}, expected: "services.s3 = new aws.S3({apiVersion: 'latest'})\n\nservices.sns = new aws.SNS()"},
+}
+
+var injectGitLibraryIntoTemplateTestCases = []struct {
+	// filename string // filename to read payload
+	// err      error  // an error flag
+	// expected string // expected file payload
+}{
+// {
+// 	filename: "no_such_file.txt",
+// 	err:      errors.New("open no_such_file.txt: no such file or directory"),
+// 	expected: "",
+// },
+// {
+// 	filename: path.Join(os.Getenv("GOPATH"), "src", "github.com", "cloudrecipes",
+// 		"lambda-wrapper", "test", "fixtures", "fs_readfile.txt"),
+// 	err:      nil,
+// 	expected: "Hello Test!",
+// },
 }

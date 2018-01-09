@@ -4,10 +4,10 @@ package awswrapper
 
 import (
 	"fmt"
-	"io/ioutil"
 	"path"
 	s "strings"
 
+	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
 	gs "github.com/cloudrecipes/lambda-wrapper/internal/pkg/sourcer/git"
 	p "github.com/cloudrecipes/packagejson/pkg/packagejson"
@@ -48,7 +48,7 @@ func injectLibraryIntoTemplate(template string, opts *options.Options) (string, 
 // injectGitLibraryIntoTemplate injects git based library into template.
 func injectGitLibraryIntoTemplate(template string, opts *options.Options) (string, error) {
 	filepath := path.Join(opts.Output, gs.GitSourceDir, "package.json")
-	payload, err := ioutil.ReadFile(filepath)
+	payload, err := fs.ReadFileToBytes(filepath)
 	if err != nil {
 		return "", err
 	}
