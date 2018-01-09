@@ -52,6 +52,20 @@ type TestCommander struct {
 	EnvVars []string
 }
 
+// EnvVarsForTestMocks returns an array of additional environment variables
+// for use in TestCommander.
+func EnvVarsForTestMocks(namespace, expected string, err error) []string {
+	code := "0"
+	if err != nil {
+		code = "1"
+	}
+
+	return []string{
+		fmt.Sprintf("GO_TEST_%s_EXPECTED=%s", namespace, expected),
+		fmt.Sprintf("GO_TEST_%s_EXIT_CODE=%s", namespace, code),
+	}
+}
+
 // CombinedOutput creates mock of Commander.
 func (c TestCommander) CombinedOutput(command string, args ...string) ([]byte, error) {
 	cs := []string{"-test.run=TestHelperProcess", "--", command}
@@ -68,16 +82,25 @@ func (c TestCommander) CombinedOutput(command string, args ...string) ([]byte, e
 	return out, err
 }
 
-// EnvVarsForCommander returns an array of additional environment variables
-// for use in TestCommander.
-func EnvVarsForCommander(namespace, expected string, err error) []string {
-	code := "0"
-	if err != nil {
-		code = "1"
-	}
+// TestFs is a test implementation of fs.I interface.
+type TestFs struct{}
 
-	return []string{
-		fmt.Sprintf("GO_TEST_%s_EXPECTED=%s", namespace, expected),
-		fmt.Sprintf("GO_TEST_%s_EXIT_CODE=%s", namespace, code),
-	}
+// ReadFile is test implementation of read file to string.
+func (fs *TestFs) ReadFile(filename string) (string, error) {
+	return "", nil
+}
+
+// ReadFileToBytes is a test implementation of read file to bytes.
+func (fs *TestFs) ReadFileToBytes(filename string) ([]byte, error) {
+	return nil, nil
+}
+
+// RmDir is a test implementation of remove directory.
+func (fs *TestFs) RmDir(basedir string) error {
+	return nil
+}
+
+// ZipDir is a test implementaiton of zip directory.
+func (fs *TestFs) ZipDir(source, target string) error {
+	return nil
 }

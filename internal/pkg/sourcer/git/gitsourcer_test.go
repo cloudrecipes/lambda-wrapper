@@ -41,7 +41,7 @@ func TestLibGet(t *testing.T) {
 	}
 
 	for _, test := range sourcerTestCases {
-		envvars := tu.EnvVarsForCommander("GITSOURCER", test.expected, test.err)
+		envvars := tu.EnvVarsForTestMocks("GITSOURCER", test.expected, test.err)
 		commander := &tu.TestCommander{EnvVars: envvars}
 		out, err := sourcer.LibGet(commander, test.libname, tu.Testdir)
 		actual := string(out[:])
@@ -68,7 +68,7 @@ func TestLibGet(t *testing.T) {
 }
 
 func TestLibTest(t *testing.T) {
-	envvars := tu.EnvVarsForCommander("GITSOURCER", "", errors.New("LibTest error"))
+	envvars := tu.EnvVarsForTestMocks("GITSOURCER", "", errors.New("LibTest error"))
 	commander := &tu.TestCommander{EnvVars: envvars}
 	_, err := sourcer.LibTest(commander, tu.Testdir)
 
@@ -79,7 +79,7 @@ func TestLibTest(t *testing.T) {
 
 func TestLibDeps(t *testing.T) {
 	for _, test := range depsTestCases {
-		envvars := tu.EnvVarsForCommander("GITSOURCER", test.expected, test.err)
+		envvars := tu.EnvVarsForTestMocks("GITSOURCER", test.expected, test.err)
 		commander := &tu.TestCommander{EnvVars: envvars}
 		_, err := sourcer.LibDeps(commander, tu.Testdir, test.isprod)
 
@@ -98,7 +98,7 @@ func TestLibDeps(t *testing.T) {
 
 func TestVerifySourcerCommands(t *testing.T) {
 	for _, test := range verifyCommandsTestCases {
-		envvars := tu.EnvVarsForCommander("GITSOURCER", test.expected, test.err)
+		envvars := tu.EnvVarsForTestMocks("GITSOURCER", test.expected, test.err)
 		commander := &tu.TestCommander{EnvVars: envvars}
 		err := sourcer.VerifySourcerCommands(commander)
 
