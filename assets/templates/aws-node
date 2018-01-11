@@ -12,7 +12,7 @@ const services = {}
 exports.handler = (event, context, cb) => {
 
   handler.main(event, services)
-    .then(() => cb())
+    .then(res => cb(null, res))
     .catch(cb)
 
 }
