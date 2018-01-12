@@ -10,7 +10,7 @@ import (
 	f "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
 	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
 	gs "github.com/cloudrecipes/lambda-wrapper/internal/pkg/sourcer/git"
-	p "github.com/cloudrecipes/packagejson/pkg/packagejson"
+	p "github.com/cloudrecipes/packagejson"
 )
 
 // awsservices is the map of supported services and handler initiators.
