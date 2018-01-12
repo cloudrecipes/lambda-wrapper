@@ -20,3 +20,4 @@ vendor/
 .cover/
 
 tmp*
+.DS_Store

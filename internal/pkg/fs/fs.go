@@ -102,30 +102,26 @@ func (fs *Fs) ZipDir(source, target string) error {
 	archive := zip.NewWriter(zipfile)
 	defer archive.Close()
 
-	info, err := os.Stat(source)
-	if err != nil {
+	if _, err = os.Stat(source); err != nil {
 		return err
 	}
 
-	var basedir string
-	if info.IsDir() {
-		basedir = filepath.Base(source)
-	}
-
-	return filepath.Walk(source, filepathWalk(basedir, source, archive))
+	return filepath.Walk(source, filepathWalk(source, archive))
 }
 
-func filepathWalk(basedir, source string, archive zipWriter) func(path string, info os.FileInfo, err error) error {
+func filepathWalk(source string, archive zipWriter) func(path string, info os.FileInfo, err error) error {
 	return func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
 
-		header, _ := zip.FileInfoHeader(info)
-
-		if basedir != "" {
-			header.Name = filepath.Join(basedir, strings.TrimPrefix(path, source))
+		pathtail := strings.TrimPrefix(path, source)
+		if pathtail == "" {
+			return nil
 		}
+
+		header, _ := zip.FileInfoHeader(info)
+		header.Name = filepath.Join(pathtail)
 
 		if info.IsDir() {
 			header.Name += "/"

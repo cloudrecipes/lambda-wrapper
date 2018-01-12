@@ -61,7 +61,6 @@ var _ os.FileInfo = (*TestFileInfo)(nil)
 var testFileInfo = &TestFileInfo{}
 
 var filepathWalkTestCases = []struct {
-	basedir  string
 	source   string
 	archive  zipWriter
 	path     string
@@ -69,7 +68,7 @@ var filepathWalkTestCases = []struct {
 	err      error
 	expected error
 }{
-	{basedir: "", source: "", archive: nil, path: "", info: nil, err: errors.New("Test Error"), expected: errors.New("Test Error")},
-	{basedir: "", source: "", archive: brokenZipWriter, path: "blah", info: testFileInfo, err: nil, expected: errors.New("Create Header Error")},
-	{basedir: "", source: "", archive: validZipWriter, path: "blah", info: testFileInfo, err: nil, expected: errors.New("open blah: no such file or directory")},
+	{source: "", archive: nil, path: "", info: nil, err: errors.New("Test Error"), expected: errors.New("Test Error")},
+	{source: "", archive: brokenZipWriter, path: "blah", info: testFileInfo, err: nil, expected: errors.New("Create Header Error")},
+	{source: "", archive: validZipWriter, path: "blah", info: testFileInfo, err: nil, expected: errors.New("open blah: no such file or directory")},
 }
