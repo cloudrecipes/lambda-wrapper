@@ -52,6 +52,27 @@ func main() {
 			fmt.Printf("%v\n", opts)
 		}
 
+		// stepsMap := []struct {
+		// 	name     string
+		// 	stepFunc interface{}
+		// 	info     string
+		// 	err      string
+		// }{
+		// 	{name: "getSourcer", stepFunc: getSourcer, info: "info", err: "err"},
+		// 	{name: "verifySourcer", stepFunc: getSourcer, info: "info", err: "err"},
+		// 	{name: "makeDirs", stepFunc: getSourcer, info: "info", err: "err"},
+		// 	{name: "getLibrary", stepFunc: getSourcer, info: "info", err: "err"},
+		// 	{name: "getLibraryDeps", stepFunc: getSourcer, info: "info", err: "err"},
+		// 	{name: "testLibrary", stepFunc: getSourcer, info: "info", err: "err"},
+		// 	{name: "getLibraryForBuild", stepFunc: getSourcer, info: "info", err: "err"},
+		// 	{name: "getLibraryDepsForBuild", stepFunc: getSourcer, info: "info", err: "err"},
+		// 	{name: "getWrapper", stepFunc: getSourcer, info: "info", err: "err"},
+		// 	{name: "wrapLibrary", stepFunc: getSourcer, info: "info", err: "err"},
+		// 	{name: "saveWrappedLibrary", stepFunc: getSourcer, info: "info", err: "err"},
+		// 	{name: "saveWrapperHandler", stepFunc: getSourcer, info: "info", err: "err"},
+		// 	{name: "createDeployables", stepFunc: getSourcer, info: "info", err: "err"},
+		// }
+
 		// Prepate library sourcer
 		fmt.Println("[1] getting sourcer...")
 		if sourcer, err = getSourcer(opts.LibSource); err != nil {
