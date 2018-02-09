@@ -67,4 +67,3 @@ func (s *GitSourcer) VerifySourcerCommands(c cmd.Commander) error {
 }
 
 // INFO: Only for NodeJS based lambdas
-// TODO: wrapper should parse package.json to find an entry point and test
