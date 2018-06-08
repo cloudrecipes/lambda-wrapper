@@ -3,7 +3,7 @@ package awswrapper_test
 import (
 	"errors"
 
-	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
+	"github.com/cloudrecipes/lambda-wrapper/pkg/options"
 )
 
 var template = `// AWS SDK dependency

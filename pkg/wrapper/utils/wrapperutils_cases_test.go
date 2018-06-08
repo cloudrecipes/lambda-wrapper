@@ -3,7 +3,7 @@ package wrapperutils_test
 import (
 	"errors"
 
-	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
+	tu "github.com/cloudrecipes/lambda-wrapper/pkg/testutils"
 )
 
 var templateFileNameTestCases = []struct {

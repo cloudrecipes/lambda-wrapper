@@ -7,9 +7,9 @@ import (
 	"path"
 	s "strings"
 
-	f "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
-	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
-	gs "github.com/cloudrecipes/lambda-wrapper/internal/pkg/sourcer/git"
+	f "github.com/cloudrecipes/lambda-wrapper/pkg/fs"
+	"github.com/cloudrecipes/lambda-wrapper/pkg/options"
+	gs "github.com/cloudrecipes/lambda-wrapper/pkg/sourcer/git"
 	p "github.com/cloudrecipes/packagejson"
 )
 

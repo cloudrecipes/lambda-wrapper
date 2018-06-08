@@ -4,7 +4,7 @@ package gitsourcer
 import (
 	"path"
 
-	cmd "github.com/cloudrecipes/lambda-wrapper/internal/pkg/commander"
+	cmd "github.com/cloudrecipes/lambda-wrapper/pkg/commander"
 )
 
 // GitSourcer structure.

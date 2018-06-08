@@ -5,8 +5,8 @@ import (
 	"path"
 	"testing"
 
-	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
-	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/wrapper"
+	tu "github.com/cloudrecipes/lambda-wrapper/pkg/testutils"
+	"github.com/cloudrecipes/lambda-wrapper/pkg/wrapper"
 )
 
 func TestWrap(t *testing.T) {

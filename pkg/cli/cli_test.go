@@ -8,8 +8,8 @@ import (
 	s "strings"
 	"testing"
 
-	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/cli"
-	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
+	"github.com/cloudrecipes/lambda-wrapper/pkg/cli"
+	"github.com/cloudrecipes/lambda-wrapper/pkg/options"
 )
 
 func TestNewCliApp(t *testing.T) {
