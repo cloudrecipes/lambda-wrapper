@@ -1,7 +1,7 @@
 package awswrapper_test
 
 import "testing"
-import w "github.com/cloudrecipes/lambda-wrapper/internal/pkg/wrapper/aws"
+import w "github.com/cloudrecipes/lambda-wrapper/pkg/wrapper/aws"
 
 func TestWrapper(t *testing.T) {
 	wrapper := &w.AwsWrapper{}

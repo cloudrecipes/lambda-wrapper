@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
-	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
+	"github.com/cloudrecipes/lambda-wrapper/pkg/options"
+	tu "github.com/cloudrecipes/lambda-wrapper/pkg/testutils"
 )
 
 func TestValidate(t *testing.T) {

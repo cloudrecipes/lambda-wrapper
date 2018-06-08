@@ -7,8 +7,8 @@ import (
 	"path"
 	"testing"
 
-	f "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
-	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
+	f "github.com/cloudrecipes/lambda-wrapper/pkg/fs"
+	tu "github.com/cloudrecipes/lambda-wrapper/pkg/testutils"
 )
 
 var fs = &f.Fs{}

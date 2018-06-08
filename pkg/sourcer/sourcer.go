@@ -1,7 +1,7 @@
 // Package sourcer implements operations (download, test, etc.) with different library sources.
 package sourcer
 
-import cmd "github.com/cloudrecipes/lambda-wrapper/internal/pkg/commander"
+import cmd "github.com/cloudrecipes/lambda-wrapper/pkg/commander"
 
 // Sourcer is a generic interface for all types of sources.
 type Sourcer interface {

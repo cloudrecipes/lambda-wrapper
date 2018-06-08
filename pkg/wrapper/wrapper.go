@@ -5,9 +5,9 @@ import (
 	"os"
 	"path"
 
-	f "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
-	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
-	utils "github.com/cloudrecipes/lambda-wrapper/internal/pkg/wrapper/utils"
+	f "github.com/cloudrecipes/lambda-wrapper/pkg/fs"
+	"github.com/cloudrecipes/lambda-wrapper/pkg/options"
+	utils "github.com/cloudrecipes/lambda-wrapper/pkg/wrapper/utils"
 )
 
 // templatedir is the default template directory

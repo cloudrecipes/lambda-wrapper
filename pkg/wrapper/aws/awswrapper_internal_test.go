@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
+	tu "github.com/cloudrecipes/lambda-wrapper/pkg/testutils"
 )
 
 func TestInjectLibraryIntoTemplate(t *testing.T) {

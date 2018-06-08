@@ -4,7 +4,7 @@ package cli
 import (
 	"fmt"
 
-	"github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
+	"github.com/cloudrecipes/lambda-wrapper/pkg/options"
 	clihandler "gopkg.in/urfave/cli.v1"
 )
 

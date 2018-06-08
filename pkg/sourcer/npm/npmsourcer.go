@@ -2,7 +2,7 @@
 package npmsourcer
 
 import (
-	cmd "github.com/cloudrecipes/lambda-wrapper/internal/pkg/commander"
+	cmd "github.com/cloudrecipes/lambda-wrapper/pkg/commander"
 )
 
 // NpmSourcer structure.

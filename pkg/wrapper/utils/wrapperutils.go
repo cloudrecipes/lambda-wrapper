@@ -6,7 +6,7 @@ import (
 	"path"
 	s "strings"
 
-	f "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
+	f "github.com/cloudrecipes/lambda-wrapper/pkg/fs"
 )
 
 // TemplateFileName returns template file name in regards to cloud provider name

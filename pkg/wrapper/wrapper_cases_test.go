@@ -3,8 +3,8 @@ package wrapper_test
 import (
 	"errors"
 
-	o "github.com/cloudrecipes/lambda-wrapper/internal/pkg/options"
-	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
+	o "github.com/cloudrecipes/lambda-wrapper/pkg/options"
+	tu "github.com/cloudrecipes/lambda-wrapper/pkg/testutils"
 )
 
 type testWrapper struct{}

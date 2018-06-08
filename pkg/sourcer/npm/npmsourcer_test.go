@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"testing"
 
-	s "github.com/cloudrecipes/lambda-wrapper/internal/pkg/sourcer/npm"
-	tu "github.com/cloudrecipes/lambda-wrapper/internal/pkg/testutils"
+	s "github.com/cloudrecipes/lambda-wrapper/pkg/sourcer/npm"
+	tu "github.com/cloudrecipes/lambda-wrapper/pkg/testutils"
 )
 
 var sourcer *s.NpmSourcer

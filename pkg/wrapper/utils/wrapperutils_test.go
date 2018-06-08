@@ -1,8 +1,8 @@
 package wrapperutils_test
 
 import "testing"
-import "github.com/cloudrecipes/lambda-wrapper/internal/pkg/wrapper/utils"
-import f "github.com/cloudrecipes/lambda-wrapper/internal/pkg/fs"
+import "github.com/cloudrecipes/lambda-wrapper/pkg/wrapper/utils"
+import f "github.com/cloudrecipes/lambda-wrapper/pkg/fs"
 
 func TestBuildTemplateFileName(t *testing.T) {
 	for _, test := range templateFileNameTestCases {
